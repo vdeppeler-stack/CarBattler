@@ -50,6 +50,8 @@ namespace IronSyndicate
             {
                 _nextTick += 0.5f;
                 Damage(_held, TickDamage * Power);
+                // A killing tick releases the hook (GrabLink) and clears _held.
+                if (_held == null) return;
             }
             if (Time.time >= _wallCooldown)
             {

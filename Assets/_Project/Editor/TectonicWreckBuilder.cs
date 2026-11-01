@@ -189,27 +189,31 @@ namespace IronSyndicate.EditorTools
             d1.startHidden = d2.startHidden = true;
             door.revealPickups = new[] { d1, d2 };
 
-            // --- Visible pickups
-            Pickup(pickups, PickupKind.Weapon, new Vector3(-30f, 0f, 30f), db.Weapon("blaze_rocket"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(45f, 0f, -38f), db.Weapon("seeker_dart"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(0f, -8f, -5f), db.Weapon("titan_warhead"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(-80f, 0f, -30f), db.Weapon("kinetic_disc"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(15f, 0f, 45f), db.Weapon("c4_satchel"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(-15f, 0f, -40f), db.Weapon("c4_satchel"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(60f, 0f, 25f), db.Weapon("thermite_gel"));
-            Pickup(pickups, PickupKind.Weapon, new Vector3(-60f, 0f, -20f), db.Weapon("spider_mine"));
+            // --- Visible pickups: point-symmetric around the centre, like the duel spawns 0 and 1
+            // (balancing run 1: an uneven layout gave spawn side 1 72 % of the wins).
+            void Pair(PickupKind kind, Vector3 p, string weapon = null)
+            {
+                Pickup(pickups, kind, p, weapon != null ? db.Weapon(weapon) : null);
+                Pickup(pickups, kind, new Vector3(-p.x, p.y, -p.z), weapon != null ? db.Weapon(weapon) : null);
+            }
+            Pair(PickupKind.Weapon, new Vector3(-45f, 0f, 40f), "blaze_rocket");
+            Pair(PickupKind.Weapon, new Vector3(60f, 0f, 25f), "seeker_dart");
+            Pair(PickupKind.Weapon, new Vector3(-15f, 0f, 62f), "thermite_gel");
+            Pair(PickupKind.Weapon, new Vector3(80f, 0f, 30f), "kinetic_disc");
+            Pair(PickupKind.Weapon, new Vector3(-100f, 0f, 40f), "spider_mine");
+            Pair(PickupKind.Weapon, new Vector3(15f, 0f, 45f), "c4_satchel");
+            Pickup(pickups, PickupKind.Weapon, new Vector3(0f, -8f, 0f), db.Weapon("titan_warhead"));
             Pickup(pickups, PickupKind.Weapon, new Vector3(-25f, 0f, -45f), db.Weapon("tesla_arc"));
-            Pickup(pickups, PickupKind.NanoPatch, new Vector3(-107f, 0f, 0f));
-            Pickup(pickups, PickupKind.NanoPatch, new Vector3(0f, -8f, 6f));
-            Pickup(pickups, PickupKind.NanoPatch, new Vector3(95f, 0f, 70f));
-            Pickup(pickups, PickupKind.NitroCell, new Vector3(107f, 0f, 0f));
-            Pickup(pickups, PickupKind.NitroCell, new Vector3(-90f, 0f, 70f));
+            Pair(PickupKind.NanoPatch, new Vector3(-107f, 0f, 0f));
+            Pair(PickupKind.NanoPatch, new Vector3(0f, -8f, 8f));
+            Pair(PickupKind.NanoPatch, new Vector3(95f, 0f, 70f));
+            Pair(PickupKind.NitroCell, new Vector3(-90f, 0f, 70f));
             Pickup(pickups, PickupKind.CoreOvercharge, new Vector3(80f, 10f, -56f));
 
             // --- Five spawns
             var spawns = new GameObject("SpawnPoints").transform;
             Spawn(spawns, 0, new Vector3(-95f, 0.2f, 65f), Vector3.zero);
-            Spawn(spawns, 1, new Vector3(95f, 0.2f, -70f), Vector3.zero);
+            Spawn(spawns, 1, new Vector3(95f, 0.2f, -65f), Vector3.zero);
             Spawn(spawns, 2, new Vector3(-95f, 0.2f, -65f), Vector3.zero);
             Spawn(spawns, 3, new Vector3(40f, 0.2f, 40f), new Vector3(0f, 0.2f, 0f));
             Spawn(spawns, 4, new Vector3(-20f, -7.8f, 0f), new Vector3(20f, -7.8f, 0f));
