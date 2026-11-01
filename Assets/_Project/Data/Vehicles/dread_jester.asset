@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6ccac97de8af3408a64e0ae10a6b6f, type: 3}
+  m_Name: dread_jester
+  m_EditorClassIdentifier: IronSyndicate.Runtime::IronSyndicate.VehicleDefinition
+  id: dread_jester
+  displayName: Dread Jester
+  driver: Grinlock Prime
+  vehicleType: Gigantischer Kirmes-Schwertransporter
+  playable: 0
+  secret: 0
+  boss: 1
+  armorStars: 5
+  speedStars: 3
+  specialStars: 5
+  handling: 1
+  mass: 6000
+  maxHp: 900
+  acceleration: 17.6
+  topSpeed: 40
+  cornerGrip: 1
+  turnRate: 95
+  specialId: battering_charge
+  specialName: Hellfire Carousel
+  specialDescription: "Endboss. Phase 1: Rammtransporter. Phase 2: rotierender Karussell-Gesch\xFCtzturm."
+  specialCharges: 2
+  specialRecharge: 8
+  specialPower: 1.45
+  bodyStyle: 14
+  bodySize: {x: 3.6, y: 3, z: 9}
+  wheelRadius: 0.9
+  bodyColor: {r: 0.1, g: 0.05, b: 0.08, a: 1}
+  bodyPrefab: {fileID: 0}

@@ -121,3 +121,6 @@ Desktop.ini
 
 # Python (Blender-Skripte als Modul importiert)
 __pycache__/
+
+# Local captures and lab output
+/[Cc]aptures/

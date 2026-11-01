@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6be3116db7469bc4190ad954b691e093, type: 3}
+  m_Name: seeker_dart
+  m_EditorClassIdentifier: IronSyndicate.Runtime::IronSyndicate.WeaponDefinition
+  id: seeker_dart
+  displayName: Seeker Dart
+  behaviour: 0
+  chargesPerPickup: 2
+  cooldown: 0.5
+  directDamage: 20
+  splashDamage: 5
+  splashRadius: 2
+  ignites: 0
+  freezes: 0
+  speed: 55
+  range: 150
+  homingDegPerSec: 180
+  requiresLock: 1
+  lockConeDeg: 35
+  gravity: 0
+  fuseTime: 0
+  triggerRadius: 0
+  color: {r: 0.2, g: 0.5, b: 1, a: 1}
+  visualScale: 0.4
+  environmentOnly: 0

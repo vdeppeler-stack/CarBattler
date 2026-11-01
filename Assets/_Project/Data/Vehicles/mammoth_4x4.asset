@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6ccac97de8af3408a64e0ae10a6b6f, type: 3}
+  m_Name: mammoth_4x4
+  m_EditorClassIdentifier: IronSyndicate.Runtime::IronSyndicate.VehicleDefinition
+  id: mammoth_4x4
+  displayName: Mammoth 4x4
+  driver: Zack & Rocco
+  vehicleType: Monster-Truck
+  playable: 1
+  secret: 0
+  boss: 0
+  armorStars: 4
+  speedStars: 2
+  specialStars: 4
+  handling: 0
+  mass: 2400
+  maxHp: 260
+  acceleration: 15.4
+  topSpeed: 36
+  cornerGrip: 0.78
+  turnRate: 74.1
+  specialId: battering_charge
+  specialName: Battering Charge
+  specialDescription: "Rammschild f\xFCr 4 s; der n\xE4chste Aufprall verursacht tempoabh\xE4ngig hohen Schaden und kippt das Ziel."
+  specialCharges: 2
+  specialRecharge: 10
+  specialPower: 1.3
+  bodyStyle: 11
+  bodySize: {x: 2.8, y: 1.6, z: 4.8}
+  wheelRadius: 0.95
+  bodyColor: {r: 0.8, g: 0.1, b: 0.1, a: 1}
+  bodyPrefab: {fileID: 0}

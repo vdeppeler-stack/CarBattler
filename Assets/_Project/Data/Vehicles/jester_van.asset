@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6ccac97de8af3408a64e0ae10a6b6f, type: 3}
+  m_Name: jester_van
+  m_EditorClassIdentifier: IronSyndicate.Runtime::IronSyndicate.VehicleDefinition
+  id: jester_van
+  displayName: Jester Van
+  driver: Grinlock
+  vehicleType: Gepanzerter Schaustellerwagen
+  playable: 1
+  secret: 1
+  boss: 0
+  armorStars: 4
+  speedStars: 2
+  specialStars: 5
+  handling: 0
+  mass: 2400
+  maxHp: 260
+  acceleration: 15.4
+  topSpeed: 36
+  cornerGrip: 0.78
+  turnRate: 74.1
+  specialId: fireworks_finale
+  specialName: Fireworks Finale
+  specialDescription: "F\xE4cher aus f\xFCnf Feuerwerksraketen mit leichter Zielsuche."
+  specialCharges: 2
+  specialRecharge: 8
+  specialPower: 1.45
+  bodyStyle: 12
+  bodySize: {x: 2.4, y: 2, z: 5}
+  wheelRadius: 0.55
+  bodyColor: {r: 0.85, g: 0.2, b: 0.6, a: 1}
+  bodyPrefab: {fileID: 0}

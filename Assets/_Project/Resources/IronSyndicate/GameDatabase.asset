@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac49bd9b857b64c4782945db8f2699fc, type: 3}
+  m_Name: GameDatabase
+  m_EditorClassIdentifier: IronSyndicate.Runtime::IronSyndicate.GameDatabase
+  vehicles:
+  - {fileID: 11400000, guid: 01ee52d659969594582d660d4f224111, type: 2}
+  - {fileID: 11400000, guid: 74f7e0656492c2e4dab9b09621a44ec3, type: 2}
+  - {fileID: 11400000, guid: 2d56de9321402ae4abd5d4ef9bb78bd5, type: 2}
+  - {fileID: 11400000, guid: ec9578f7895b00247bc4429fdce0557b, type: 2}
+  - {fileID: 11400000, guid: f7ca69b31eb98e34aa907bd7f66e764c, type: 2}
+  - {fileID: 11400000, guid: b06d7e8c8988e8c4489931395026c800, type: 2}
+  - {fileID: 11400000, guid: 9020df80cc21d1f408074dc105206461, type: 2}
+  - {fileID: 11400000, guid: 07917105e06bbe047bbe1ab24e20dc43, type: 2}
+  - {fileID: 11400000, guid: c0dec266b1f0db240a80771f1cfb0e1c, type: 2}
+  - {fileID: 11400000, guid: 910b9e11722b2674ba24e255d025a271, type: 2}
+  - {fileID: 11400000, guid: d48128eec553fcc42b075ed41cab3c44, type: 2}
+  - {fileID: 11400000, guid: 37b3cabe3189f68499acaa020ceab13f, type: 2}
+  - {fileID: 11400000, guid: a8dcb1b06750b104ba49e9b2f99c5e54, type: 2}
+  - {fileID: 11400000, guid: 39e08948c64b9084ebf709b63edc4f0d, type: 2}
+  - {fileID: 11400000, guid: 4031664564b0eb345ba6eb0989601680, type: 2}
+  weapons:
+  - {fileID: 11400000, guid: f35212455dfcce0499b31cfbca3fb689, type: 2}
+  - {fileID: 11400000, guid: 71e598c2c295fff49ac3eeb77d59fab9, type: 2}
+  - {fileID: 11400000, guid: 1345195bc60d67b44b331b0b3979f8e3, type: 2}
+  - {fileID: 11400000, guid: 1407d56850ff25c4093e42522b46a3f3, type: 2}
+  - {fileID: 11400000, guid: f5ad88c243ac35144bc0fa2068de98a9, type: 2}
+  - {fileID: 11400000, guid: 16534b02f5634b549af95ce23b55df51, type: 2}
+  - {fileID: 11400000, guid: a76dc10bce2eca143833c8db6b8f81ee, type: 2}
+  - {fileID: 11400000, guid: de87be8534da9054d99a6e06cfd059c7, type: 2}
