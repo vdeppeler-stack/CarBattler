@@ -102,12 +102,36 @@ namespace IronSyndicate.EditorTools
             EditorUtility.SetDirty(carousel);
             db.vehicles.Add(carousel);
 
+            ApplyBalancing(db);
             EditorUtility.SetDirty(db);
             EnsureBaseMaterial(BaseMaterials.LitPath, "Universal Render Pipeline/Lit");
             EnsureBaseMaterial(BaseMaterials.UnlitPath, "Universal Render Pipeline/Unlit");
             AssetDatabase.SaveAssets();
             Debug.Log($"[IS] Data built: {db.vehicles.Count} vehicles, {db.weapons.Count} weapons.");
             return db;
+        }
+
+        /// <summary>
+        /// HP corrections from the Stage 1 duel runs (Docs/Balancing/Auswertung.md). Stars and menu values stay
+        /// as in the GDD; only the derived hit points move.
+        /// </summary>
+        static readonly (string id, float hp)[] HpTuning =
+        {
+            ("vortex_f1", 40f),      // 15–18 % win rate, mostly lost by knock-out
+            ("goliath_wheel", 30f),  // 27–32 %
+            ("sandviper", 25f),      // 31 %
+            ("leviathan_apc", -40f), // 67–85 %
+        };
+
+        static void ApplyBalancing(GameDatabase db)
+        {
+            foreach (var (id, hp) in HpTuning)
+            {
+                var v = db.Vehicle(id);
+                if (v == null) continue;
+                v.maxHp += hp;
+                EditorUtility.SetDirty(v);
+            }
         }
 
         /// <summary>Runtime colour templates live in Resources so their shaders ship with the player.</summary>

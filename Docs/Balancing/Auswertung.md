@@ -22,6 +22,17 @@ Zeitlimit 180 s, danach entscheidet der HP-Anteil. Laufzeit 102 min im Batchmodu
 Die Startseiten-Verzerrung überlagert alle Fahrzeugwerte. Deshalb werden die Fahrzeugwerte erst nach dem
 Kontrolllauf mit symmetrischer Karte angepasst.
 
-## Lauf 2 (Kontrolle, symmetrische Pickups, Seed 11, 182 Duelle)
+## Lauf 2 (Kontrolle, symmetrische Pickups, Seed 11, 182 Duelle, `Lauf2_symmetrisch_seed11/`)
 
-Siehe `Lauf2_*/` – Ergebnis wird nach dem Lauf eingetragen.
+- Startseite 0 gewinnt 79 von 160 entschiedenen Duellen (49 %) – die Verzerrung ist behoben.
+- Keine Ausnahmen mehr im Protokoll; 53 Duelle (29 %) nach Zeit entschieden.
+- Siegquoten: Leviathan 85 %, Nocturne 69 %, Phase GT 65 %, Rustfang/Bonechaser 58 %, Interceptor 50 %,
+  Mammoth 38 %, Sandviper/Iron Jaw/Bastion/Chrome Igniter 31 %, Goliath Wheel/Jester Van 27 %, Vortex F1 15 %.
+
+Vortex F1, Goliath Wheel und Sandviper liegen in beiden Läufen unten, Leviathan oben.
+→ HP-Korrekturen im Datenbau (`DataBuilder.HpTuning`, Sterne/Menüwerte unverändert):
+Vortex F1 +40, Goliath Wheel +30, Sandviper +25, Leviathan APC −40.
+
+## Lauf 3 (Kontrolle nach HP-Korrektur, Seed 22, 182 Duelle)
+
+Ergebnis wird nach dem Lauf eingetragen.

@@ -24,7 +24,7 @@ MonoBehaviour:
   specialStars: 5
   handling: 1
   mass: 2750
-  maxHp: 300
+  maxHp: 260
   acceleration: 19.8
   topSpeed: 44
   cornerGrip: 1

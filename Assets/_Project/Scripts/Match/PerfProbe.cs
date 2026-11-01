@@ -107,7 +107,7 @@ namespace IronSyndicate
             sb.AppendLine();
             sb.AppendLine($"- Gerät: {SystemInfo.deviceModel} · CPU {SystemInfo.processorType} ({SystemInfo.processorCount} Threads) · GPU {SystemInfo.graphicsDeviceName} ({SystemInfo.graphicsMemorySize} MB) · RAM {SystemInfo.systemMemorySize} MB");
             sb.AppendLine($"- Betrieb: {(SystemInfo.batteryStatus == BatteryStatus.Discharging ? "Akku" : "Netz/unklar")} · Auflösung {Screen.width}x{Screen.height} · Build {Application.version} · Unity {Application.unityVersion}");
-            sb.AppendLine($"- Aufwärmen {warmupSeconds:F0} s, Messung {measureSeconds / 60f:F0} min, {_frames.Count} Frames, {_rounds} Runden, Brückeneinsturz {(_bridgeDone ? "ja" : "nein")}");
+            sb.AppendLine($"- Aufwärmen {warmupSeconds:F0} s, Messung {measureSeconds / 60f:0.#} min, {_frames.Count} Frames, {_rounds} Runden, Brückeneinsturz {(_bridgeDone ? "ja" : "nein")}");
             sb.AppendLine();
             sb.AppendLine("| Wert | ms | FPS |");
             sb.AppendLine("|---|---|---|");
