@@ -59,8 +59,9 @@ namespace IronSyndicate
                 if (vel.magnitude > 6f && Physics.Raycast(_held.transform.position + Vector3.up, vel.normalized, _held.Definition.bodySize.z * 0.5f + 1f, Targeting.LosMask, QueryTriggerInteraction.Ignore))
                 {
                     _wallCooldown = Time.time + 0.6f;
-                    Damage(_held, WallDamage * Power);
-                    TestLog.Write("special", V.name, "harpoon-wall-hit", _held.name);
+                    var held = _held; // a killing hit releases the hook and clears _held
+                    Damage(held, WallDamage * Power);
+                    TestLog.Write("special", V.name, "harpoon-wall-hit", held.name);
                 }
             }
         }

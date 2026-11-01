@@ -43,6 +43,18 @@ Vortex F1 +40, Goliath Wheel +30, Sandviper +25, Leviathan APC −40.
   Leviathan bleibt klar vorn.
 → Vortex F1 jetzt +60 HP, Leviathan APC −80 HP. Weitere Anpassungen erst nach einem vollen Lauf mit drei Seeds.
 
-## Nächster Schritt
+## Lauf 4 (voll, 546 Duelle, Seeds 11/22/33, neue Modelle, HP-Korrekturen, `Lauf4_voll_neu/`)
 
-Voller Lauf (546 Duelle) mit dem Build, der die neuen Modelle und die HP-Korrekturen enthält.
+- Startseite 0 gewinnt 225 von 463 entschiedenen Duellen (49 %) – Karte ausgeglichen.
+- 164 Duelle (30 %) nach Zeit entschieden; 2 Ausnahmen (Chain Harpoon, Wandtreffer tötet Ziel) – behoben.
+- Siegquoten: Phase GT 71 %, Interceptor V8 64 %, Nocturne 59 %, Leviathan APC 53 %, Chrome Igniter 49 %,
+  Rustfang 46 %, Goliath Wheel 45 %, Bonechaser 41 %, Sandviper/Iron Jaw 35 %, Mammoth 33 %, Jester Van 24 %,
+  Vortex F1 22 %, Bastion MK-IV 18 %.
+- Wirkung der Korrekturen: Leviathan von 67–88 % auf 53 %, Goliath von 27–32 % auf 45 % – beide im Zielband.
+  Vortex F1 bleibt trotz +60 HP schwach (22 %): Ursache ist eher Fahrverhalten/Bot-Nutzung als Panzerung.
+- Neu auffällig: Bastion MK-IV (18 %, 26 Unentschieden) und Jester Van (24 %, 29 Unentschieden) – langsame
+  Fernkämpfer erreichen das Ziel in 180 s selten; Phase GT oben (71 %).
+
+**Empfehlung für die nächste Runde** (nicht umgesetzt, braucht Spieltest mit Menschen):
+Vortex F1 und Bastion über ihre Spezialfähigkeit bzw. Bot-Nutzung prüfen statt weiter HP zu erhöhen;
+Phase GT Phase Shift kürzer (1,5 s → 1,2 s) oder höhere Abklingzeit testen.
