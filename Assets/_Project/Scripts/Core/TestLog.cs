@@ -27,7 +27,7 @@ namespace IronSyndicate
             Directory.CreateDirectory(dir);
             RunId = $"{DateTime.Now:yyyyMMdd_HHmmss}_{label}_{seed}";
             _path = System.IO.Path.Combine(dir, RunId + ".csv");
-            _writer = new StreamWriter(_path, false, new UTF8Encoding(false)) { AutoFlush = true };
+            _writer = new StreamWriter(_path, false, new UTF8Encoding(false));
             _writer.WriteLine("time;category;actor;event;detail");
             Write("run", "-", "begin", $"build={Application.version};unity={Application.unityVersion};seed={seed};device={SystemInfo.deviceModel};cpu={SystemInfo.processorType};gpu={SystemInfo.graphicsDeviceName}");
         }
@@ -44,7 +44,10 @@ namespace IronSyndicate
         {
             string line = $"{Time.time:F2};{category};{actor};{evt};{detail}";
             _writer?.WriteLine(line);
-            if (EchoToConsole && category != "bot") Debug.Log("[IS] " + line);
+            // Console echo costs a stack trace per line in the editor; only the round frame is echoed.
+            bool frame = category == "run" || category == "match" || category == "result";
+            if (frame) _writer?.Flush();
+            if (EchoToConsole && frame) Debug.Log("[IS] " + line);
         }
 
         /// <summary>Blocked actions are logged with their reason so lab runs can explain silent no-ops.</summary>

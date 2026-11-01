@@ -34,20 +34,27 @@ namespace IronSyndicate
             visual.SetParent(root.transform, false);
             if (def.bodyPrefab != null)
             {
+                // Generated bodies include their wheels; the prefab's origin sits on the ground.
                 var body = Object.Instantiate(def.bodyPrefab, visual);
-                body.transform.localPosition = new Vector3(0f, rideHeight, 0f);
+                body.name = "Body";
+                body.transform.localPosition = Vector3.zero;
+                // Team colour as a ground ring that reads from the chase camera without hiding the model.
+                var ring = Box(visual, "TeamRing", new Vector3(0f, 0.04f, 0f), new Vector3(size.x + 1.2f, 0.03f, size.z + 1.2f), teamColor);
+                ring.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             }
-            else BuildPlaceholder(def, visual, rideHeight, teamColor);
-
-            // Front marker: bright wedge on the nose so heading reads from any camera.
-            Box(visual, "FrontMarker", new Vector3(0f, rideHeight + size.y + 0.05f, size.z * 0.42f), new Vector3(size.x * 0.5f, 0.12f, size.z * 0.12f), new Color(1f, 0.85f, 0.1f));
-            // Team stripe.
-            Box(visual, "TeamStripe", new Vector3(0f, rideHeight + size.y + 0.02f, -size.z * 0.1f), new Vector3(size.x * 0.25f, 0.06f, size.z * 0.6f), teamColor);
+            else
+            {
+                BuildPlaceholder(def, visual, rideHeight, teamColor);
+                // Front marker: bright wedge on the nose so heading reads from any camera.
+                Box(visual, "FrontMarker", new Vector3(0f, rideHeight + size.y + 0.05f, size.z * 0.42f), new Vector3(size.x * 0.5f, 0.12f, size.z * 0.12f), new Color(1f, 0.85f, 0.1f));
+                // Team stripe.
+                Box(visual, "TeamStripe", new Vector3(0f, rideHeight + size.y + 0.02f, -size.z * 0.1f), new Vector3(size.x * 0.25f, 0.06f, size.z * 0.6f), teamColor);
+            }
 
             var muzzle = new GameObject("Muzzle").transform;
             muzzle.SetParent(root.transform, false);
             muzzle.localPosition = new Vector3(0f, rideHeight + size.y * 0.6f, size.z * 0.5f + 0.7f);
-            Box(visual, "MuzzleMark", new Vector3(0f, rideHeight + size.y * 0.6f, size.z * 0.5f + 0.1f), new Vector3(0.25f, 0.25f, 0.4f), Color.black);
+            if (def.bodyPrefab == null) Box(visual, "MuzzleMark", new Vector3(0f, rideHeight + size.y * 0.6f, size.z * 0.5f + 0.1f), new Vector3(0.25f, 0.25f, 0.4f), Color.black);
 
             var rear = new GameObject("RearMuzzle").transform;
             rear.SetParent(root.transform, false);
@@ -139,7 +146,7 @@ namespace IronSyndicate
                 p.localPosition = points[i] + Vector3.up * (rideHeight + 0.05f);
                 wheelPoints[i] = p;
 
-                bool show = def.bodyStyle != BodyStyle.Wheel && !(def.bodyStyle == BodyStyle.Bike && points[i].x > 0f);
+                bool show = def.bodyPrefab == null && def.bodyStyle != BodyStyle.Wheel && !(def.bodyStyle == BodyStyle.Bike && points[i].x > 0f);
                 if (!show) continue;
                 var w = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 Object.Destroy(w.GetComponent<Collider>());
@@ -156,7 +163,7 @@ namespace IronSyndicate
                 wheelVisuals[i] = w.transform;
             }
 
-            if (def.bodyStyle == BodyStyle.Wheel)
+            if (def.bodyStyle == BodyStyle.Wheel && def.bodyPrefab == null)
             {
                 // Giant side wheels as static visuals.
                 for (int s = -1; s <= 1; s += 2)
@@ -219,7 +226,7 @@ namespace IronSyndicate
             }
         }
 
-        static void Box(Transform parent, string name, Vector3 localPos, Vector3 size, Color color)
+        static GameObject Box(Transform parent, string name, Vector3 localPos, Vector3 size, Color color)
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = name;
@@ -228,6 +235,7 @@ namespace IronSyndicate
             go.transform.localPosition = localPos;
             go.transform.localScale = size;
             go.GetComponent<Renderer>().sharedMaterial = Mat(color);
+            return go;
         }
 
         public static Material Mat(Color c)

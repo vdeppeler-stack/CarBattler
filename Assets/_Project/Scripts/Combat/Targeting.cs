@@ -34,6 +34,7 @@ namespace IronSyndicate
                 var to = AimPoint(v) - origin;
                 float d = to.magnitude;
                 if (d > range) continue;
+                if (v.Status.IsConcealed && d > VehicleStatus.ConcealRange) continue;
                 float angle = Vector3.Angle(dir, to);
                 if (angle > coneDeg) continue;
                 if (needLos && !HasLineOfSight(origin, AimPoint(v))) continue;

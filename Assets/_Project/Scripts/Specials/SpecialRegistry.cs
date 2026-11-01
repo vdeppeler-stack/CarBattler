@@ -7,7 +7,8 @@ namespace IronSyndicate
         public static readonly string[] Ids =
         {
             "gyro_crush", "dust_devil", "wall_press", "wraith_lantern", "slipstream_lance", "mortar_grid", "spike_net",
-            "exhaust_inferno", "phase_shift", "chain_harpoon", "scythe_sweep", "battering_charge", "fireworks_finale", "siege_lock"
+            "exhaust_inferno", "phase_shift", "chain_harpoon", "scythe_sweep", "battering_charge", "fireworks_finale", "siege_lock",
+            "dread_ram", "hellfire_carousel"
         };
 
         public static SpecialAbility Attach(GameObject go, string id)
@@ -28,6 +29,8 @@ namespace IronSyndicate
                 case "battering_charge": return go.AddComponent<BatteringCharge>();
                 case "fireworks_finale": return go.AddComponent<FireworksFinale>();
                 case "siege_lock": return go.AddComponent<SiegeLock>();
+                case "dread_ram": return go.AddComponent<DreadRam>();
+                case "hellfire_carousel": return go.AddComponent<HellfireCarousel>();
                 default:
                     if (!string.IsNullOrEmpty(id)) Debug.LogWarning($"[IS] Unknown special '{id}'");
                     return null;

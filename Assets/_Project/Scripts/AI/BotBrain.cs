@@ -5,7 +5,8 @@ namespace IronSyndicate
     /// <summary>
     /// Bot seat: staggered perception, retreat/re-engage by HP thresholds, direct steering with obstacle
     /// feelers and stuck recovery. Every special decision (use or hold) is logged with its reason.
-    /// A hand-authored drive graph replaces direct steering once the arena graph exists.
+    /// When the arena has a <see cref="DriveGraph"/>, goals that cannot be driven to in a straight line are
+    /// routed over it (roads, jumps, drops, teleporters) and replanned when arena objects are destroyed.
     /// </summary>
     public class BotBrain : MonoBehaviour, ISeatInput
     {
@@ -28,12 +29,20 @@ namespace IronSyndicate
         float _stuckTimer, _unstickUntil, _unstickSteer;
         int _stuckCount;
         float _lastSteer;
-        float _nextSpecialLog;
+        float _nextSpecialLog, _nextSpecialTry;
         string _lastSpecialReason;
         Vector3 _wanderGoal;
         float _wanderUntil;
         float _detourUntil, _detourSteer, _movingTime;
         readonly System.Collections.Generic.Dictionary<PickupSpawner, float> _blockedGoals = new System.Collections.Generic.Dictionary<PickupSpawner, float>();
+
+        // Drive graph route: _goal is what the bot wants, _steerGoal the next waypoint towards it.
+        readonly System.Collections.Generic.List<DriveEdge> _route = new System.Collections.Generic.List<DriveEdge>();
+        int _routeIdx, _routeVersion = -1;
+        bool _startReached;
+        Vector3 _routeGoal, _steerGoal;
+        float _nextRoute;
+        DriveEdge _edge;
 
         public string State { get; private set; } = "idle";
         public Vehicle Target => _target;
@@ -55,7 +64,9 @@ namespace IronSyndicate
                 _nextPerceive = time + perceptionInterval;
                 Perceive(time);
                 Decide(time);
+                UpdateRoute(time);
             }
+            AdvanceRoute();
 
             var cmd = Drive(time);
             if (_target != null && _targetVisible && !_retreating) Fight(ref cmd, time);
@@ -78,6 +89,7 @@ namespace IronSyndicate
                 if (other.Status.IsCloaked && !alreadyTracked) continue;
                 float d = Vector3.Distance(eye, other.transform.position);
                 if (d > 140f) continue;
+                if (other.Status.IsConcealed && d > VehicleStatus.ConcealRange && !alreadyTracked) continue;
                 if (!Targeting.HasLineOfSight(eye, Targeting.AimPoint(other))) continue;
                 if (other.Status.IsCloaked) continue;
                 float score = d * (other == _target ? 0.7f : 1f) * (other.Status.IsFrozen ? 0.6f : 1f);
@@ -159,6 +171,94 @@ namespace IronSyndicate
             return best;
         }
 
+        // ------------------------------------------------------------------ routing
+
+        static float Flat(Vector3 d) => new Vector2(d.x, d.z).magnitude;
+
+        /// <summary>Straight drive possible: similar height, no wall in between and ground all along the line.</summary>
+        static bool DirectlyReachable(Vector3 from, Vector3 to)
+        {
+            if (Mathf.Abs(to.y - from.y) > 2.5f) return false;
+            var a = from + Vector3.up * 1.2f;
+            var b = to + Vector3.up * 1.2f;
+            var d = b - a;
+            float len = d.magnitude;
+            if (len > 90f) return false;
+            if (len < 0.5f) return true;
+            if (Physics.SphereCast(a, 0.9f, d / len, out _, len, Targeting.LosMask, QueryTriggerInteraction.Ignore)) return false;
+            int samples = Mathf.CeilToInt(len / 8f);
+            for (int i = 1; i < samples; i++)
+            {
+                var p = Vector3.Lerp(a, b, i / (float)samples);
+                if (!Physics.Raycast(p, Vector3.down, 4.5f, Targeting.LosMask, QueryTriggerInteraction.Ignore)) return false;
+            }
+            return true;
+        }
+
+        void UpdateRoute(float time)
+        {
+            var graph = DriveGraph.Instance;
+            if (graph == null) { _steerGoal = _goal; _edge = null; return; }
+            var pos = _v.transform.position;
+            if (DirectlyReachable(pos, _goal))
+            {
+                _route.Clear();
+                _edge = null;
+                _steerGoal = _goal;
+                return;
+            }
+
+            bool arenaChanged = Destructible.Version != _routeVersion;
+            bool stale = _route.Count == 0 || _routeIdx >= _route.Count || arenaChanged
+                         || (_goal - _routeGoal).sqrMagnitude > 15f * 15f || time >= _nextRoute;
+            if (!stale) return;
+
+            if (arenaChanged && _route.Count > 0) TestLog.Write("bot", _v.name, "replan", "arena-changed");
+            _routeVersion = Destructible.Version;
+            _routeGoal = _goal;
+            _nextRoute = time + 3f;
+            _routeIdx = 0;
+            _startReached = false;
+            int start = graph.Nearest(pos), end = graph.Nearest(_goal);
+            if (!graph.FindPath(start, end, _route) || _route.Count == 0)
+            {
+                _route.Clear();
+                _edge = null;
+                _steerGoal = start >= 0 && Flat(graph.nodes[start] - pos) > 8f ? graph.nodes[start] : _goal;
+                return;
+            }
+            _edge = _route[0];
+        }
+
+        void AdvanceRoute()
+        {
+            var graph = DriveGraph.Instance;
+            if (graph == null || _edge == null || _routeIdx >= _route.Count) { _edge = null; _steerGoal = _goal; return; }
+            var pos = _v.transform.position;
+            var from = graph.nodes[_edge.from];
+            var to = graph.nodes[_edge.to];
+            if (!_startReached && (Flat(pos - from) < 8f || Flat(pos - to) < Flat(from - to))) _startReached = true;
+            if (Flat(pos - to) < 7f && Mathf.Abs(pos.y - to.y) < 3f)
+            {
+                _routeIdx++;
+                _startReached = true;
+                _edge = _routeIdx < _route.Count ? _route[_routeIdx] : null;
+                if (_edge == null) { _steerGoal = _goal; return; }
+                from = graph.nodes[_edge.from];
+                to = graph.nodes[_edge.to];
+            }
+            // Teleporters: drive onto the pad; the jump to 'to' happens by itself.
+            _steerGoal = !_startReached || _edge.kind == EdgeKind.Teleport ? from : to;
+        }
+
+        DriveEdge JumpAhead()
+        {
+            if (_edge == null) return null;
+            if (_edge.kind == EdgeKind.Jump) return _edge;
+            int next = _routeIdx + 1;
+            return next < _route.Count && _route[next].kind == EdgeKind.Jump ? _route[next] : null;
+        }
+
         // ------------------------------------------------------------------ driving
 
         VehicleCommand Drive(float time)
@@ -181,7 +281,7 @@ namespace IronSyndicate
                 return cmd;
             }
 
-            var local = t.InverseTransformPoint(_goal);
+            var local = t.InverseTransformPoint(_steerGoal);
             float angle = Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg;
             float dist = local.magnitude;
             float absAngle = Mathf.Abs(angle);
@@ -223,6 +323,16 @@ namespace IronSyndicate
                 if (hitR && Vector3.Angle(hr.normal, Vector3.up) > 50f) steer -= 0.5f * (1f - hr.distance / reach);
             }
 
+            // Jump edge ahead: straight run-up at speed, nitro if short of the lip speed.
+            var jump = JumpAhead();
+            if (jump != null && absAngle < 25f)
+            {
+                throttle = 1f;
+                cmd.Brake = 0f;
+                cmd.Drift = false;
+                if (speed < jump.minSpeed + 2f && _v.Motor.Nitro > 0f) cmd.Boost = true;
+            }
+
             cmd.Steer = Mathf.Clamp(steer, -1f, 1f);
             cmd.Throttle = throttle;
             if (_retreating && _target != null && Vector3.Distance(_lastKnown, t.position) < 20f && _v.Motor.Nitro > 30f) cmd.Boost = true;
@@ -241,6 +351,7 @@ namespace IronSyndicate
                     _detourUntil = _unstickUntil + 1.2f;
                     _detourSteer = -_unstickSteer * 0.8f;
                     _wanderUntil = 0f;
+                    _nextRoute = 0f;
                     // Repeated failure on the same goal: avoid it for a while.
                     if (_stuckCount >= 2 && _goalPickup != null)
                     {
@@ -355,11 +466,12 @@ namespace IronSyndicate
         void ConsiderSpecial(ref VehicleCommand cmd, float dist, float time)
         {
             var a = _v.Arsenal;
-            if (!a.SpecialReady) return;
+            if (!a.SpecialReady || time < _nextSpecialTry) return;
             bool use = a.Special.BotShouldUse(_target, dist, _targetVisible, out var reason);
             if (use)
             {
                 cmd.Special = true;
+                _nextSpecialTry = time + 1.5f;
                 TestLog.Write("bot-special", _v.name, "use", reason);
             }
             else if (time >= _nextSpecialLog || reason != _lastSpecialReason)

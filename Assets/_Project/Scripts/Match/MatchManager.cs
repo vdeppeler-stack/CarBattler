@@ -22,6 +22,8 @@ namespace IronSyndicate
         public string defaultPlayerVehicle = "goliath_wheel";
         public int defaultBotCount = 4;
         public bool defaultHumanPlaying = true;
+        [Tooltip("Test lab: no round end, participants may be added and removed freely.")]
+        public bool labMode;
         public Color[] teamColors =
         {
             new Color(0.1f, 0.6f, 1f), new Color(1f, 0.25f, 0.2f), new Color(0.2f, 0.9f, 0.3f),
@@ -40,6 +42,8 @@ namespace IronSyndicate
         public bool AllowsControl => State == Phase.Running;
 
         public event Action<MatchManager> Ended;
+        /// <summary>Any participant eliminated (victim, killer or null).</summary>
+        public event Action<Vehicle, Vehicle> Eliminated;
 
         void Awake()
         {
@@ -108,8 +112,35 @@ namespace IronSyndicate
             if (cam != null) cam.target = Human != null ? Human : Participants.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Adds a participant mid-round (lab spawns, boss phase 2). Called from inside a death handler it is
+        /// counted in the same step, so a boss phase change never ends the round.
+        /// </summary>
+        public Vehicle SpawnExtra(VehicleDefinition def, Vector3 position, Quaternion rotation, bool human, string nameOverride = null)
+        {
+            int seat = Participants.Count;
+            var v = VehicleFactory.Spawn(def, position, rotation, seat, human, teamColors[seat % teamColors.Length], Seed + seat * 7919);
+            if (!string.IsNullOrEmpty(nameOverride)) v.name = $"{nameOverride} [{seat}]";
+            v.Died += OnVehicleDied;
+            Participants.Add(v);
+            if (human) Human = v;
+            TestLog.Write("match", v.name, "spawn-extra", $"vehicle={def.id};pos={position:F0};human={human}");
+            return v;
+        }
+
+        /// <summary>Lab: removes a participant without a kill.</summary>
+        public void Despawn(Vehicle v)
+        {
+            if (v == null) return;
+            Participants.Remove(v);
+            if (Human == v) Human = null;
+            GrabLink.ReleaseAll(v);
+            Destroy(v.gameObject);
+        }
+
         void OnVehicleDied(Vehicle v, Vehicle killer)
         {
+            Eliminated?.Invoke(v, killer);
             if (Human != null && v == Human)
             {
                 var cam = FindAnyObjectByType<ChaseCamera>();
@@ -132,8 +163,9 @@ namespace IronSyndicate
                 case Phase.Running:
                     RoundTime += Time.deltaTime;
                     // Evaluated after the physics step, so eliminations in the same step count together.
-                    int alive = Participants.Count(p => p.IsAlive);
-                    if (alive <= 1 && Participants.Count > 1) End(alive == 1 ? Participants.First(p => p.IsAlive) : null);
+                    if (labMode) break;
+                    int alive = Participants.Count(p => p != null && p.IsAlive);
+                    if (alive <= 1 && Participants.Count > 1) End(alive == 1 ? Participants.First(p => p != null && p.IsAlive) : null);
                     break;
             }
         }

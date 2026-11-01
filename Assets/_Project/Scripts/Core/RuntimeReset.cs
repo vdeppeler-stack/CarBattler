@@ -27,6 +27,9 @@ namespace IronSyndicate
             SpawnPoint.All.Clear();
             PickupSpawner.All.Clear();
             TeslaReactor.All.Clear();
+            Destructible.All.Clear();
+            Destructible.ResetStatics();
+            Teleporter.ResetStatics();
             GrabLink.Clear();
             Projectile.ResetPools();
         }

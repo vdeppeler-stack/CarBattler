@@ -53,22 +53,62 @@ namespace IronSyndicate.EditorTools
             return go;
         }
 
-        /// <summary>Ramp rising along local +Z from bottom edge at pos to the given height.</summary>
+        /// <summary>
+        /// Solid wedge rising along local +Z from the bottom edge at bottomCenter to the given height.
+        /// Solid so nothing can wedge itself underneath and the side faces never act as launch lips.
+        /// </summary>
         public static GameObject Ramp(Transform parent, string name, Vector3 bottomCenter, float width, float length, float height, float yaw, Material mat)
         {
-            float slope = Mathf.Atan2(height, length) * Mathf.Rad2Deg;
-            float hyp = Mathf.Sqrt(length * length + height * height);
-            var rot = Quaternion.Euler(0f, yaw, 0f);
-            var center = bottomCenter + rot * new Vector3(0f, height * 0.5f, length * 0.5f);
-            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            go.name = name;
+            var go = new GameObject(name);
             go.transform.SetParent(parent, false);
-            go.transform.localPosition = center - rot * (Vector3.up * 0.25f);
-            go.transform.localRotation = rot * Quaternion.Euler(-slope, 0f, 0f);
-            go.transform.localScale = new Vector3(width, 0.5f, hyp);
-            go.GetComponent<Renderer>().sharedMaterial = mat;
+            go.transform.localPosition = bottomCenter;
+            go.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            go.transform.localScale = new Vector3(width, height, length);
+            var mesh = WedgeMesh();
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
+            go.AddComponent<MeshRenderer>().sharedMaterial = mat;
+            go.AddComponent<MeshCollider>().sharedMesh = mesh;
             go.isStatic = true;
             return go;
+        }
+
+        const string WedgePath = "Assets/_Project/Generated/Meshes/Wedge.asset";
+
+        /// <summary>Unit wedge: x -0.5..0.5, slope from (y 0, z 0) to (y 1, z 1), vertical back face at z 1.</summary>
+        public static Mesh WedgeMesh()
+        {
+            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(WedgePath);
+            if (mesh != null) return mesh;
+            Directory.CreateDirectory(Path.GetDirectoryName(WedgePath));
+            Vector3 a = new Vector3(-0.5f, 0f, 0f), b = new Vector3(0.5f, 0f, 0f);
+            Vector3 c = new Vector3(-0.5f, 0f, 1f), d = new Vector3(0.5f, 0f, 1f);
+            Vector3 e = new Vector3(-0.5f, 1f, 1f), f = new Vector3(0.5f, 1f, 1f);
+            var v = new List<Vector3>();
+            var t = new List<int>();
+            void Quad(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+            {
+                int i = v.Count;
+                v.AddRange(new[] { p0, p1, p2, p3 });
+                t.AddRange(new[] { i, i + 1, i + 2, i, i + 2, i + 3 });
+            }
+            void Tri(Vector3 p0, Vector3 p1, Vector3 p2)
+            {
+                int i = v.Count;
+                v.AddRange(new[] { p0, p1, p2 });
+                t.AddRange(new[] { i, i + 1, i + 2 });
+            }
+            Quad(a, e, f, b);   // slope
+            Quad(c, a, b, d);   // bottom
+            Quad(d, f, e, c);   // back
+            Tri(a, c, e);       // left
+            Tri(b, f, d);       // right
+            mesh = new Mesh { name = "Wedge" };
+            mesh.SetVertices(v);
+            mesh.SetTriangles(t, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            AssetDatabase.CreateAsset(mesh, WedgePath);
+            return mesh;
         }
 
         public static SpawnPoint Spawn(Transform parent, int index, Vector3 pos, Vector3 lookAt)

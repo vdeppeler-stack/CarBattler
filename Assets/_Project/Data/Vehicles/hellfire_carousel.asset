@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6ccac97de8af3408a64e0ae10a6b6f, type: 3}
+  m_Name: hellfire_carousel
+  m_EditorClassIdentifier: IronSyndicate.Runtime::IronSyndicate.VehicleDefinition
+  id: hellfire_carousel
+  displayName: Hellfire Carousel
+  driver: Grinlock Prime
+  vehicleType: "Karussell-Gesch\xFCtzturm (Bossphase 2)"
+  playable: 0
+  secret: 0
+  boss: 1
+  armorStars: 4
+  speedStars: 1
+  specialStars: 5
+  handling: 0
+  mass: 4000
+  maxHp: 450
+  acceleration: 13.2
+  topSpeed: 9
+  cornerGrip: 0.78
+  turnRate: 74.1
+  specialId: hellfire_carousel
+  specialName: Feuerkarussell
+  specialDescription: Rotiert langsam und feuert Raketensalven im Ring und gezielt.
+  specialCharges: 2
+  specialRecharge: 8
+  specialPower: 1.45
+  bodyStyle: 14
+  bodySize: {x: 5, y: 2.4, z: 5}
+  wheelRadius: 0.7
+  bodyColor: {r: 0.6, g: 0.1, b: 0.05, a: 1}
+  bodyPrefab: {fileID: 0}

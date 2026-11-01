@@ -148,6 +148,14 @@ namespace IronSyndicate
             AnimateWheels(dt);
         }
 
+        /// <summary>Stasis: springs only; the vehicle keeps sliding or rolling with what it had.</summary>
+        public void StepFrozen()
+        {
+            Suspension();
+            Boosting = false;
+            ForwardSpeed = Vector3.Dot(_rb.linearVelocity, transform.forward);
+        }
+
         void Suspension()
         {
             int grounded = 0;
@@ -158,8 +166,10 @@ namespace IronSyndicate
                 var p = wheelPoints[i];
                 bool hitGround = Physics.Raycast(p.position, -transform.up, out var hit, reach, _groundMask, QueryTriggerInteraction.Ignore);
                 float dist = hitGround ? hit.distance - _wheelRadius : suspensionLength;
+                // Local offset under the interpolated body: a world position set here would lag the
+                // interpolated parent and make the wheels jitter.
                 if (i < wheelVisuals.Length && wheelVisuals[i] != null)
-                    wheelVisuals[i].position = p.position - transform.up * Mathf.Clamp(dist, 0f, suspensionLength);
+                    wheelVisuals[i].localPosition = Vector3.down * Mathf.Clamp(dist, 0f, suspensionLength);
                 if (!hitGround) continue;
 
                 grounded++;

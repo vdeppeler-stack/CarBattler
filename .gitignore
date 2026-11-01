@@ -124,3 +124,6 @@ __pycache__/
 
 # Local captures and lab output
 /[Cc]aptures/
+
+# Handbook images (recreate with ArtSource/Tools/crop_handbook.ps1)
+/ArtSource/Handbook/

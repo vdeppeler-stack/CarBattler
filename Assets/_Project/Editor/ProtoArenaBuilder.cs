@@ -29,10 +29,10 @@ namespace IronSyndicate.EditorTools
 
             const float half = 70f;
             Block(env, "Floor", new Vector3(0f, -0.5f, 0f), new Vector3(half * 2f, 1f, half * 2f), ground);
-            Block(env, "Wall_N", new Vector3(0f, 3f, half + 1f), new Vector3(half * 2f + 4f, 6f, 2f), wall);
-            Block(env, "Wall_S", new Vector3(0f, 3f, -half - 1f), new Vector3(half * 2f + 4f, 6f, 2f), wall);
-            Block(env, "Wall_E", new Vector3(half + 1f, 3f, 0f), new Vector3(2f, 6f, half * 2f), wall);
-            Block(env, "Wall_W", new Vector3(-half - 1f, 3f, 0f), new Vector3(2f, 6f, half * 2f), wall);
+            Block(env, "Wall_N", new Vector3(0f, 7f, half + 1f), new Vector3(half * 2f + 4f, 14f, 2f), wall);
+            Block(env, "Wall_S", new Vector3(0f, 7f, -half - 1f), new Vector3(half * 2f + 4f, 14f, 2f), wall);
+            Block(env, "Wall_E", new Vector3(half + 1f, 7f, 0f), new Vector3(2f, 14f, half * 2f), wall);
+            Block(env, "Wall_W", new Vector3(-half - 1f, 7f, 0f), new Vector3(2f, 14f, half * 2f), wall);
 
             // Cover blocks in a loose ring, plus two low walls to shoot over with lobbed weapons.
             for (int i = 0; i < 8; i++)

@@ -83,7 +83,7 @@ namespace IronSyndicate.EditorTools
             leviathan.secret = true;
             db.vehicles.Add(leviathan);
             var dread = Vehicle("dread_jester", "Dread Jester", "Grinlock Prime", "Gigantischer Kirmes-Schwertransporter", 5, 3, 5, HandlingClass.Average,
-                "battering_charge", "Hellfire Carousel", "Endboss. Phase 1: Rammtransporter. Phase 2: rotierender Karussell-Geschützturm.",
+                "dread_ram", "Rammfahrt", "Endboss. Phase 1: Rammtransporter mit Rammfahrt. Phase 2: Hellfire Carousel löst sich als rotierender Geschützturm.",
                 BodyStyle.BossRig, new Vector3(3.6f, 3.0f, 9.0f), 0.9f, new Color(0.1f, 0.05f, 0.08f));
             dread.playable = false;
             dread.boss = true;
@@ -91,6 +91,16 @@ namespace IronSyndicate.EditorTools
             dread.mass = 6000f;
             EditorUtility.SetDirty(dread);
             db.vehicles.Add(dread);
+            var carousel = Vehicle("hellfire_carousel", "Hellfire Carousel", "Grinlock Prime", "Karussell-Geschützturm (Bossphase 2)", 4, 1, 5, HandlingClass.Sluggish,
+                "hellfire_carousel", "Feuerkarussell", "Rotiert langsam und feuert Raketensalven im Ring und gezielt.",
+                BodyStyle.BossRig, new Vector3(5.0f, 2.4f, 5.0f), 0.7f, new Color(0.6f, 0.1f, 0.05f));
+            carousel.playable = false;
+            carousel.boss = true;
+            carousel.maxHp = 450f;
+            carousel.mass = 4000f;
+            carousel.topSpeed = 9f;
+            EditorUtility.SetDirty(carousel);
+            db.vehicles.Add(carousel);
 
             EditorUtility.SetDirty(db);
             AssetDatabase.SaveAssets();

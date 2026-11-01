@@ -18,6 +18,10 @@ namespace IronSyndicate
         public WeaponDefinition weapon;
         public int amountOverride;
         public float respawnSeconds = DefaultRespawn;
+        [Tooltip("Hidden until revealed (destroyed letter, pillar, depot door).")]
+        public bool startHidden;
+        [Tooltip("Never respawns once taken.")]
+        public bool oneShot;
 
         Transform _visual;
         float _respawnAt;
@@ -35,6 +39,20 @@ namespace IronSyndicate
             col.isTrigger = true;
             col.radius = 1.6f;
             BuildVisual();
+            if (startHidden)
+            {
+                Available = false;
+                _respawnAt = float.PositiveInfinity;
+                _visual.gameObject.SetActive(false);
+            }
+        }
+
+        public void Reveal()
+        {
+            if (Available) return;
+            Available = true;
+            _visual.gameObject.SetActive(true);
+            TestLog.Write("arena", name, "revealed", "");
         }
 
         void BuildVisual()
@@ -77,7 +95,7 @@ namespace IronSyndicate
 
             // Claim first, then grant: a second contact in the same step finds it unavailable.
             Available = false;
-            _respawnAt = Time.time + respawnSeconds;
+            _respawnAt = oneShot ? float.PositiveInfinity : Time.time + respawnSeconds;
             _visual.gameObject.SetActive(false);
 
             switch (kind)

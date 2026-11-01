@@ -13,7 +13,7 @@ namespace IronSyndicate.Tests
         {
             Assert.IsNotNull(Db, "Run Iron Syndicate/Build/Data first.");
             Assert.AreEqual(14, Db.Playable().Count(), "14 playable vehicles");
-            Assert.AreEqual(15, Db.vehicles.Count, "14 playable + end boss");
+            Assert.AreEqual(16, Db.vehicles.Count, "14 playable + end boss in two phases");
             Assert.AreEqual(8, Db.weapons.Count);
         }
 

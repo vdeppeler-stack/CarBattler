@@ -82,6 +82,8 @@ namespace IronSyndicate
             if (Definition == null) return;
             if (!IsAlive)
             {
+                // Wrecks that left the arena stop simulating.
+                if (transform.position.y < FallKillY * 2f) { Body.isKinematic = true; return; }
                 Motor.Step(VehicleCommand.Idle, Time.fixedDeltaTime);
                 return;
             }
@@ -96,7 +98,9 @@ namespace IronSyndicate
             LastCommand = cmd;
 
             float dt = Time.fixedDeltaTime;
-            Motor.Step(cmd, dt);
+            // Stasis keeps gravity and momentum: only the suspension acts, no drive, brake or grip.
+            if (Status.IsFrozen) Motor.StepFrozen();
+            else Motor.Step(cmd, dt);
             Arsenal.Step(cmd, dt);
             Status.Step(dt);
 
@@ -159,7 +163,7 @@ namespace IronSyndicate
             Status.ClearAll();
             Arsenal.OnDeath();
             GrabLink.ReleaseAll(this);
-            TestLog.Write("match", name, "eliminated", $"by={(killer != null ? killer.name : "-")};cause={cause}");
+            TestLog.Write("match", name, "eliminated", $"by={(killer != null ? killer.name : "-")};cause={cause};pos={transform.position:F0}");
             Fx.Burst(transform.position, 4f, new Color(1f, 0.5f, 0.1f), 0.6f);
             foreach (var r in GetComponentsInChildren<Renderer>())
                 foreach (var m in r.materials) m.color *= 0.25f;

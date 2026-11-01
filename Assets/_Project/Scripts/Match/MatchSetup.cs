@@ -21,5 +21,13 @@ namespace IronSyndicate
         public static readonly List<int> SpawnOrder = new List<int>();
         /// <summary>Lab/developer build: every vehicle selectable without unlocking.</summary>
         public static bool RosterUnlocked = true;
+
+        /// <summary>Selectable arenas: scene name and display name.</summary>
+        public static readonly (string scene, string title)[] Arenas =
+        {
+            ("Tectonic_Wreck", "Tectonic Wreck"),
+            ("Proto_Arena", "Proto-Arena"),
+        };
+        public static int ArenaIndex;
     }
 }

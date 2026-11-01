@@ -15,8 +15,6 @@ namespace IronSyndicate
     /// </summary>
     public class VehicleSelectMenu : MonoBehaviour
     {
-        public string matchScene = "Proto_Arena";
-
         static readonly HashSet<string> Unlocked = new HashSet<string>();
 
         Font _font;
@@ -84,7 +82,7 @@ namespace IronSyndicate
                 $"{v.displayName}\nFahrer: {v.driver} · {v.vehicleType}\n\n" +
                 $"Panzerung     {Stars(v.armorStars)}\nTempo         {Stars(v.speedStars)}\nSpezial       {Stars(v.specialStars)}\nHandling      {v.handling}\n\n" +
                 $"Spezial: {v.specialName}\n{v.specialDescription}\n\nHP {v.maxHp:F0} · {v.topSpeed * 3.6f:F0} km/h";
-            _info.text = $"↑/↓ wählen · Enter/Start: Gefecht gegen {MatchSetup.BotCount} Bots · ←/→ Botanzahl · Esc: Beenden";
+            _info.text = $"↑/↓ wählen · ←/→ Botanzahl ({MatchSetup.BotCount}) · Tab/□ Arena: {MatchSetup.Arenas[MatchSetup.ArenaIndex].title} · Enter/Start: Gefecht · Esc: Beenden";
         }
 
         void Update()
@@ -100,6 +98,7 @@ namespace IronSyndicate
             if (Pressed(kb?.qKey, pad?.leftShoulder)) Code(MenuKey.L1, t);
             if (Pressed(kb?.eKey, pad?.rightShoulder)) Code(MenuKey.R1, t);
             if (Pressed(kb?.tKey, pad?.buttonNorth)) Code(MenuKey.Triangle, t);
+            if (Pressed(kb?.tabKey, pad?.buttonWest)) { MatchSetup.ArenaIndex = (MatchSetup.ArenaIndex + 1) % MatchSetup.Arenas.Length; Refresh(); }
             if (Pressed(kb?.enterKey, pad?.startButton) || Pressed(kb?.numpadEnterKey, pad?.buttonSouth)) StartMatch();
             if (kb != null && kb.escapeKey.wasPressedThisFrame) Application.Quit();
         }
@@ -126,7 +125,7 @@ namespace IronSyndicate
             MatchSetup.SpawnOrder.Clear();
             MatchSetup.RandomizeSeedOnStart = true;
             MatchSetup.Label = "match";
-            SceneManager.LoadScene(matchScene);
+            SceneManager.LoadScene(MatchSetup.Arenas[MatchSetup.ArenaIndex].scene);
         }
 
         Text Label(Transform parent, Vector2 pos, int size, Vector2 box)

@@ -90,6 +90,12 @@ namespace IronSyndicate
         }
 
         public void Phase(float duration) => _phaseLeft = duration;
+
+        /// <summary>Reeds and similar cover: hidden from lock-on and bot sight beyond <see cref="ConcealRange"/>.</summary>
+        public const float ConcealRange = 12f;
+        float _concealedUntil;
+        public bool IsConcealed => Time.time < _concealedUntil;
+        public void Conceal(float seconds) => _concealedUntil = Mathf.Max(_concealedUntil, Time.time + seconds);
         public void Snare(float duration) => _snareLeft = Mathf.Max(_snareLeft, duration);
 
         public void Step(float dt)

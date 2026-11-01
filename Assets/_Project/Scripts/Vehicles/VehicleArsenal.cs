@@ -23,7 +23,8 @@ namespace IronSyndicate
         public const float ScrapHealPerCharge = 0.05f;
 
         Vehicle _v;
-        float _nextGun, _nextWeapon, _rechargeTimer;
+        float _nextGun, _nextWeapon, _rechargeTimer, _specialLockUntil;
+        public const float SpecialLockSeconds = 1f;
         bool _gunAlt;
         Projectile _placedRemote;
         static int _gunMask = -1;
@@ -195,6 +196,8 @@ namespace IronSyndicate
         {
             if (Special == null) { TestLog.Blocked(_v, "special", "none"); return false; }
             if (SpecialCharges <= 0) { TestLog.Blocked(_v, "special", "no-charge"); return false; }
+            // One charge per press: a held or repeated input must not burn two charges back to back.
+            if (Time.time < _specialLockUntil) return false;
             _v.Stats.specialAttempts++;
             if (!Special.TryActivate(out var reason))
             {
@@ -203,6 +206,7 @@ namespace IronSyndicate
                 return false;
             }
             SpecialCharges--;
+            _specialLockUntil = Time.time + SpecialLockSeconds;
             TestLog.Write("special", _v.name, _v.Definition.specialId, "activated");
             return true;
         }

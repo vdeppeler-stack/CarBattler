@@ -28,6 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a8dcb1b06750b104ba49e9b2f99c5e54, type: 2}
   - {fileID: 11400000, guid: 39e08948c64b9084ebf709b63edc4f0d, type: 2}
   - {fileID: 11400000, guid: 4031664564b0eb345ba6eb0989601680, type: 2}
+  - {fileID: 11400000, guid: 2d0ea8f6804eeac4aacfe3932f52597e, type: 2}
   weapons:
   - {fileID: 11400000, guid: f35212455dfcce0499b31cfbca3fb689, type: 2}
   - {fileID: 11400000, guid: 71e598c2c295fff49ac3eeb77d59fab9, type: 2}

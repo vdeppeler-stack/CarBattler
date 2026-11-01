@@ -29,9 +29,9 @@ MonoBehaviour:
   topSpeed: 40
   cornerGrip: 1
   turnRate: 95
-  specialId: battering_charge
-  specialName: Hellfire Carousel
-  specialDescription: "Endboss. Phase 1: Rammtransporter. Phase 2: rotierender Karussell-Gesch\xFCtzturm."
+  specialId: dread_ram
+  specialName: Rammfahrt
+  specialDescription: "Endboss. Phase 1: Rammtransporter mit Rammfahrt. Phase 2: Hellfire Carousel l\xF6st sich als rotierender Gesch\xFCtzturm."
   specialCharges: 2
   specialRecharge: 8
   specialPower: 1.45

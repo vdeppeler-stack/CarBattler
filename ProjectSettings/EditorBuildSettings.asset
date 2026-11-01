@@ -11,5 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Proto_Arena.unity
     guid: 13c6b6a336166ae48ae5c044037dbf52
+  - enabled: 1
+    path: Assets/_Project/Scenes/Tectonic_Wreck.unity
+    guid: 9beadfa782be3d14b935d97e9a037336
+  - enabled: 1
+    path: Assets/_Project/Scenes/Test_Lab.unity
+    guid: 4420fdf485a0de14dac367e21cda2c41
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
