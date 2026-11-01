@@ -117,10 +117,10 @@ namespace IronSyndicate.EditorTools
         /// </summary>
         static readonly (string id, float hp)[] HpTuning =
         {
-            ("vortex_f1", 40f),      // 15–18 % win rate, mostly lost by knock-out
+            ("vortex_f1", 60f),      // 15–18 % (runs 1/2), 27 % after +40 (run 3)
             ("goliath_wheel", 30f),  // 27–32 %
             ("sandviper", 25f),      // 31 %
-            ("leviathan_apc", -40f), // 67–85 %
+            ("leviathan_apc", -80f), // 67–85 % (runs 1/2), 88 % after -40 (run 3)
         };
 
         static void ApplyBalancing(GameDatabase db)

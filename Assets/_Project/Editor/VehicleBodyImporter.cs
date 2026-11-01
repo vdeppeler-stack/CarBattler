@@ -35,7 +35,7 @@ namespace IronSyndicate.EditorTools
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>($"{ArtDir}/{def.id}.fbx");
                 if (model == null) continue;
                 ConfigureImporter($"{ArtDir}/{def.id}.fbx");
-                def.bodyPrefab = BuildPrefab(def, model);
+                def.bodyPrefab = BuildPrefab(def, model, BuildMaterial(def.id));
                 EditorUtility.SetDirty(def);
                 built++;
             }
@@ -49,25 +49,86 @@ namespace IronSyndicate.EditorTools
             bool dirty = false;
             if (imp.importAnimation) { imp.importAnimation = false; dirty = true; }
             if (imp.addCollider) { imp.addCollider = false; dirty = true; }
-            if (imp.materialImportMode != ModelImporterMaterialImportMode.ImportViaMaterialDescription)
+            // Materials are built here from the converted textures, not taken from the FBX.
+            if (imp.materialImportMode != ModelImporterMaterialImportMode.None)
             {
-                imp.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
-                dirty = true;
-            }
-            if (imp.materialLocation != ModelImporterMaterialLocation.InPrefab)
-            {
-                imp.materialLocation = ModelImporterMaterialLocation.InPrefab;
+                imp.materialImportMode = ModelImporterMaterialImportMode.None;
                 dirty = true;
             }
             if (dirty) imp.SaveAndReimport();
         }
 
-        static GameObject BuildPrefab(VehicleDefinition def, GameObject model)
+        /// <summary>
+        /// URP Lit from the Blender output: base colour (sRGB), normal map, metallic/smoothness (R/A, linear)
+        /// and occlusion (linear). Wrong importer types here produce the speckled, plastic look.
+        /// </summary>
+        static Material BuildMaterial(string id)
+        {
+            string tex = $"{ArtDir}/Textures/{id}";
+            var baseMap = Texture($"{tex}_BaseColor.png", TextureImporterType.Default, true, 2048);
+            var normal = Texture($"{tex}_Normal.png", TextureImporterType.NormalMap, false, 2048);
+            var ms = Texture($"{tex}_MS.png", TextureImporterType.Default, false, 1024);
+            var ao = Texture($"{tex}_AO.png", TextureImporterType.Default, false, 1024);
+
+            Directory.CreateDirectory($"{ArtDir}/Materials");
+            string path = $"{ArtDir}/Materials/{id}.mat";
+            var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (m == null)
+            {
+                m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                AssetDatabase.CreateAsset(m, path);
+            }
+            m.SetTexture("_BaseMap", baseMap);
+            m.SetColor("_BaseColor", Color.white);
+            m.SetTexture("_BumpMap", normal);
+            m.SetFloat("_BumpScale", 1f);
+            m.SetTexture("_MetallicGlossMap", ms);
+            m.SetFloat("_Metallic", 1f);
+            m.SetFloat("_Smoothness", 1f);
+            m.SetFloat("_SmoothnessTextureChannel", 0f);
+            m.SetTexture("_OcclusionMap", ao);
+            m.SetFloat("_OcclusionStrength", 1f);
+            SetKeyword(m, "_NORMALMAP", normal != null);
+            SetKeyword(m, "_METALLICSPECGLOSSMAP", ms != null);
+            SetKeyword(m, "_OCCLUSIONMAP", ao != null);
+            if (ms == null) { m.SetFloat("_Metallic", 0.3f); m.SetFloat("_Smoothness", 0.35f); }
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
+        static void SetKeyword(Material m, string kw, bool on)
+        {
+            if (on) m.EnableKeyword(kw);
+            else m.DisableKeyword(kw);
+        }
+
+        static Texture2D Texture(string path, TextureImporterType type, bool srgb, int maxSize)
+        {
+            var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (imp == null) return null;
+            if (imp.textureType != type || imp.sRGBTexture != srgb || imp.maxTextureSize != maxSize)
+            {
+                imp.textureType = type;
+                imp.sRGBTexture = srgb;
+                imp.maxTextureSize = maxSize;
+                imp.mipmapEnabled = true;
+                imp.SaveAndReimport();
+            }
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        }
+
+        static GameObject BuildPrefab(VehicleDefinition def, GameObject model, Material material)
         {
             var root = new GameObject("Body_" + def.id);
             var inst = (GameObject)PrefabUtility.InstantiatePrefab(model);
             inst.transform.SetParent(root.transform, false);
             foreach (var c in inst.GetComponentsInChildren<Collider>()) Object.DestroyImmediate(c);
+            foreach (var r in inst.GetComponentsInChildren<Renderer>())
+            {
+                var mats = r.sharedMaterials;
+                for (int i = 0; i < mats.Length; i++) mats[i] = material;
+                r.sharedMaterials = mats;
+            }
 
             // Align the long horizontal axis with Z (except side-wheel styles, which are wider than long).
             var b = Bounds(inst);

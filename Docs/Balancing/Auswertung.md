@@ -33,6 +33,16 @@ Vortex F1, Goliath Wheel und Sandviper liegen in beiden Läufen unten, Leviathan
 → HP-Korrekturen im Datenbau (`DataBuilder.HpTuning`, Sterne/Menüwerte unverändert):
 Vortex F1 +40, Goliath Wheel +30, Sandviper +25, Leviathan APC −40.
 
-## Lauf 3 (Kontrolle nach HP-Korrektur, Seed 22, 182 Duelle)
+## Lauf 3 (Kontrolle nach HP-Korrektur, Seed 22, 182 Duelle, `Lauf3_hp_seed22/`)
 
-Ergebnis wird nach dem Lauf eingetragen.
+- Startseite 0 gewinnt 84 von 155 (54 %), 63 Zeitentscheidungen, keine Ausnahmen.
+- Siegquoten: Leviathan 88 %, Phase GT 65 %, Chrome Igniter 62 %, Interceptor 54 %, Nocturne 50 %,
+  Iron Jaw/Bonechaser 42 %, Goliath/Sandviper/Mammoth 35 %, Rustfang 31 %, Vortex F1 27 %, Bastion/Jester Van 15 %.
+- Mit 26 Duellen je Fahrzeug und Seed schwanken die Quoten stark (Chrome Igniter 31 → 62 %, Bastion 31 → 15 %);
+  belastbar sind nur Trends über mehrere Läufe: Vortex F1 zieht an (15 → 27 %), Goliath und Sandviper liegen im Feld,
+  Leviathan bleibt klar vorn.
+→ Vortex F1 jetzt +60 HP, Leviathan APC −80 HP. Weitere Anpassungen erst nach einem vollen Lauf mit drei Seeds.
+
+## Nächster Schritt
+
+Voller Lauf (546 Duelle) mit dem Build, der die neuen Modelle und die HP-Korrekturen enthält.

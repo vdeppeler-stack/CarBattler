@@ -42,15 +42,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 324c79f448729864c99a8dbfbc456a2d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4.7429366
+      value: 4.800226
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 324c79f448729864c99a8dbfbc456a2d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4.7429366
+      value: 4.800226
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 324c79f448729864c99a8dbfbc456a2d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4.7429366
+      value: 4.800226
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 324c79f448729864c99a8dbfbc456a2d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -92,6 +92,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 324c79f448729864c99a8dbfbc456a2d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 838ee414c980e814481fc3b183244910, type: 2}
     - target: {fileID: 919132149155446097, guid: 324c79f448729864c99a8dbfbc456a2d, type: 3}
       propertyPath: m_Name
       value: vortex_f1

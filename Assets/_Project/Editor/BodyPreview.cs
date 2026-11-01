@@ -98,6 +98,7 @@ namespace IronSyndicate.EditorTools
                         cam.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
                     }
                     cam.Render();
+                    cam.Render(); // a render right after a big camera move can come back empty
                     RenderTexture.active = rt;
                     tex.ReadPixels(new Rect(0, 0, _cell, _cell), 0, 0);
                     tex.Apply();

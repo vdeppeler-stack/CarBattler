@@ -133,10 +133,15 @@ I Inventar · H auffüllen · K Gegner entfernen · U Arenazustand · Strg+R zur
 ## Fahrzeugmodelle aus den Handbuch-Bildern
 
 Pipeline: Hauptbild je Fahrzeug aus dem Handbuch ausschneiden (`ArtSource/Tools/crop_handbook.ps1`) →
-ComfyUI TRELLIS.2 (Bild → 3D, `ArtSource/Comfy/`) → Blender (`ArtSource/Tools/process_vehicle.py`:
-12 000 Dreiecke, 1K-Texturen, Ursprung Bodenmitte) → `Assets/_Project/Art/Vehicles/<id>.fbx` →
-`Iron Syndicate/Build/Vehicle Bodies (generated models)` (Prefab, Ausrichtung +Z, Grösse aus dem
-Fahrzeugdatensatz). Die Kollisionsbox bleibt die des Datensatzes; Räder sind Teil des Modells.
+ComfyUI TRELLIS.2 (Bild → 3D, `ArtSource/Comfy/batch_v2/`; TRELLIS reduziert selbst auf ~15 000 Flächen
+*vor* dem Abwickeln und Backen, 2K-Texturen) → Blender (`ArtSource/Tools/process_vehicle.py`: keine weitere
+Reduktion, Ursprung Bodenmitte, Texturen für URP: Grundfarbe mit leichter Sättigungs-/Helligkeitsanhebung,
+Normal Map, Metallic/Glätte aus glTF-ORM mit Metall ×0,4, Occlusion) → `Assets/_Project/Art/Vehicles/<id>.fbx`
+→ `Iron Syndicate/Build/Vehicle Bodies (generated models)` (eigenes URP-Lit-Material je Fahrzeug, Prefab,
+Ausrichtung +Z, Länge aus dem Fahrzeugdatensatz). Alles neu verarbeiten: `ArtSource/Tools/reprocess_all.ps1`.
+
+Erste Fassung (verworfen): Reduktion in Blender von 60 000 auf 12 000 Flächen verzerrte die UVs des
+gebackenen Atlas, dazu war die Normal Map als Farbtextur importiert – Ergebnis war verrauschte Optik. Die Kollisionsbox bleibt die des Datensatzes; Räder sind Teil des Modells.
 Jester Van und Dread Jester werden vorher mit FLUX.2 Klein zum Kirmes-Schwertransporter umgestaltet
 (keine Clown- oder Eiswagenmotive). Fahrzeuge ohne Modell behalten den Grundkörper-Platzhalter.
 

@@ -42,15 +42,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 52abcc7dceb99894caeb2d764ffff95f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 6.8230352
+      value: 6.950279
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 52abcc7dceb99894caeb2d764ffff95f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 6.8230352
+      value: 6.950279
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 52abcc7dceb99894caeb2d764ffff95f, type: 3}
       propertyPath: m_LocalScale.z
-      value: 6.8230352
+      value: 6.950279
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 52abcc7dceb99894caeb2d764ffff95f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -92,6 +92,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 52abcc7dceb99894caeb2d764ffff95f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cb987070e33abf1409d6c14222d13266, type: 2}
     - target: {fileID: 919132149155446097, guid: 52abcc7dceb99894caeb2d764ffff95f, type: 3}
       propertyPath: m_Name
       value: leviathan_apc

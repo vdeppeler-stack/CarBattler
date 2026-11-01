@@ -42,15 +42,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5f942053a64ef994ab854423dbae42e0, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5.7192945
+      value: 5.7654295
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f942053a64ef994ab854423dbae42e0, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5.7192945
+      value: 5.7654295
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f942053a64ef994ab854423dbae42e0, type: 3}
       propertyPath: m_LocalScale.z
-      value: 5.7192945
+      value: 5.7654295
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f942053a64ef994ab854423dbae42e0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -92,6 +92,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 5f942053a64ef994ab854423dbae42e0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6f7a917c880b8834e9e540b9b80e227f, type: 2}
     - target: {fileID: 919132149155446097, guid: 5f942053a64ef994ab854423dbae42e0, type: 3}
       propertyPath: m_Name
       value: hellfire_carousel
