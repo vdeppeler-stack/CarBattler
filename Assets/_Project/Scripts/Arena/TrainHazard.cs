@@ -108,7 +108,7 @@ namespace IronSyndicate
         void Hit(Collision collision)
         {
             if (_state != State.Passing) return;
-            var v = collision.rigidbody != null ? collision.rigidbody.GetComponent<Vehicle>() : null;
+            var v = Vehicle.Of(collision.rigidbody);
             if (v == null || !v.IsAlive || !_hitThisPass.Add(v)) return;
             v.ReceiveDamage(DamageEvent.Create(null, v, DamageType.Hazard, damage, collision.GetContact(0).point, 0, "train"));
             var dir = (to.position - from.position).normalized;

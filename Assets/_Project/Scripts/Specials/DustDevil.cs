@@ -34,6 +34,7 @@ namespace IronSyndicate
                 fx.transform.position = pos;
                 fx.transform.localScale = Vector3.one * CloudRadius * 1.6f;
                 fx.GetComponent<Renderer>().sharedMaterial = Fx.UnlitColor(new Color(0.85f, 0.75f, 0.5f));
+                Fx.NoShadows(fx.GetComponent<Renderer>());
                 _clouds.Add((pos, Time.time + CloudLife, fx));
             }
             for (int i = _clouds.Count - 1; i >= 0; i--)
@@ -43,7 +44,7 @@ namespace IronSyndicate
                 int n = Physics.OverlapSphereNonAlloc(cl.pos, CloudRadius, Hits, LayerMask.GetMask("Vehicle"));
                 for (int k = 0; k < n; k++)
                 {
-                    var other = Hits[k].attachedRigidbody != null ? Hits[k].attachedRigidbody.GetComponent<Vehicle>() : null;
+                    var other = Vehicle.Of(Hits[k].attachedRigidbody);
                     if (other == null || other == V || !other.IsAlive) continue;
                     if (!other.Status.IsSnared) ReportHit(other);
                     other.Status.Snare(0.6f * Power);

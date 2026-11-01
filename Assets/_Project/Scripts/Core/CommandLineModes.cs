@@ -33,6 +33,7 @@ namespace IronSyndicate
             }
             else if (args.Contains("-perf"))
             {
+                PerfProbe.NoVSync = args.Contains("-novsync");
                 PerfProbe.Start(float.Parse(Arg("-warmup", "60"), System.Globalization.CultureInfo.InvariantCulture),
                     float.Parse(Arg("-perfminutes", "10"), System.Globalization.CultureInfo.InvariantCulture),
                     Path.Combine(root, "Perf"));

@@ -26,7 +26,7 @@ namespace IronSyndicate
         void OnTriggerEnter(Collider other)
         {
             if (exit == null) return;
-            var v = other.attachedRigidbody != null ? other.attachedRigidbody.GetComponent<Vehicle>() : null;
+            var v = Vehicle.Of(other.attachedRigidbody);
             if (v == null || !v.IsAlive) return;
             if (_readyAt.TryGetValue(v, out var t) && Time.time < t) return;
             _readyAt[v] = Time.time + cooldown;

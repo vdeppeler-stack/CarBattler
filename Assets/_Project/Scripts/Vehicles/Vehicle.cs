@@ -26,6 +26,12 @@ namespace IronSyndicate
     {
         public static readonly List<Vehicle> All = new List<Vehicle>();
 
+        /// <summary>
+        /// Vehicle owning a rigidbody, or null. TryGetComponent avoids the editor's per-call allocation for
+        /// missing components (GetComponent's "fake null"), which caused GC spikes in Play Mode.
+        /// </summary>
+        public static Vehicle Of(Rigidbody rb) => rb != null && rb.TryGetComponent(out Vehicle v) ? v : null;
+
         public const float RamThreshold = 7f;
         public const float RamDamagePerMs = 1.6f;
         public const float FallKillY = -25f;
@@ -173,7 +179,7 @@ namespace IronSyndicate
         void OnCollisionEnter(Collision collision)
         {
             if (!IsAlive) return;
-            var other = collision.rigidbody != null ? collision.rigidbody.GetComponent<Vehicle>() : null;
+            var other = Vehicle.Of(collision.rigidbody);
             if (other == null || !other.IsAlive) return;
 
             if (Status.IsBurning) other.Status.Ignite(this);

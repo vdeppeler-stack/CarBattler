@@ -44,7 +44,7 @@ namespace IronSyndicate
             int n = Physics.OverlapBoxNonAlloc(V.transform.position + Vector3.up, half, Hits, V.transform.rotation, LayerMask.GetMask("Vehicle"));
             for (int i = 0; i < n; i++)
             {
-                var other = Hits[i].attachedRigidbody != null ? Hits[i].attachedRigidbody.GetComponent<Vehicle>() : null;
+                var other = Vehicle.Of(Hits[i].attachedRigidbody);
                 if (other == null || other == V || !other.IsAlive) continue;
                 if (_lastHit.TryGetValue(other, out var last) && Time.time - last < RehitDelay) continue;
                 if (!_lastHit.ContainsKey(other)) ReportHit(other);

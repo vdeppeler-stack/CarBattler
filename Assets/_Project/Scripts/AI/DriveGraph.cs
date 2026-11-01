@@ -122,7 +122,8 @@ namespace IronSyndicate
             return true;
         }
 
-        void OnDrawGizmos()
+        // Only when selected: drawing ~200 edges every Scene view repaint costs editor frame time in Play Mode.
+        void OnDrawGizmosSelected()
         {
             for (int i = 0; i < nodes.Count; i++)
             {

@@ -72,10 +72,17 @@ namespace IronSyndicate
             BuildResults(root);
         }
 
+        // Every text or fill change rebuilds the whole canvas mesh; 20 Hz is plenty for a HUD and keeps
+        // string building (GC) and canvas rebuilds out of most frames.
+        const float RefreshInterval = 0.05f;
+        float _nextRefresh;
+
         void Update()
         {
             if (_match == null) return;
-            var v = _match.Human != null ? _match.Human : _match.Participants.FirstOrDefault();
+            if (Time.unscaledTime < _nextRefresh) return;
+            _nextRefresh = Time.unscaledTime + RefreshInterval;
+            var v = _match.Human != null ? _match.Human : _match.Participants.Count > 0 ? _match.Participants[0] : null;
 
             if (_match.State == MatchManager.Phase.Countdown)
                 _centerText.text = Mathf.CeilToInt(Mathf.Max(0f, _match.CountdownLeft)).ToString();
@@ -112,9 +119,13 @@ namespace IronSyndicate
             if (s.IsPhased) sb.Append("≈ PHASE  ");
             _statusText.text = sb.ToString();
 
-            var input = v.GetComponent<PlayerSeatInput>();
+            if (_inputOwner != v) { v.TryGetComponent(out _input); _inputOwner = v; }
+            var input = _input;
             _comboText.text = input != null && input.Combo.Count > 0 ? "Kombo: " + new string('•', input.Combo.Count) : "";
         }
+
+        PlayerSeatInput _input;
+        Vehicle _inputOwner;
 
         void UpdateOpponents(Vehicle self)
         {

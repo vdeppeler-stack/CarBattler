@@ -75,11 +75,13 @@ namespace IronSyndicate
             {
                 var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 go.name = "Projectile";
+                go.hideFlags = HideFlags.HideInHierarchy;
                 go.layer = LayerMask.NameToLayer("Projectile");
                 Destroy(go.GetComponent<Collider>());
                 p = go.AddComponent<Projectile>();
                 p._renderer = go.GetComponent<Renderer>();
                 p._renderer.sharedMaterial = new Material(Fx.Unlit);
+                Fx.NoShadows(p._renderer);
             }
             p.gameObject.SetActive(true);
             p.Spec = spec;
@@ -122,7 +124,7 @@ namespace IronSyndicate
             float dist = step.magnitude;
             if (dist > 0.0001f && TryHit(transform.position, step / dist, dist, out var hit))
             {
-                var vehicle = hit.rigidbody != null ? hit.rigidbody.GetComponent<Vehicle>() : null;
+                var vehicle = Vehicle.Of(hit.rigidbody);
                 if (vehicle != null && vehicle.IsAlive)
                 {
                     if (Spec.Behaviour == WeaponBehaviour.Mine || Spec.Behaviour == WeaponBehaviour.Remote) Settle(hit.point + hit.normal * 0.2f);
@@ -185,7 +187,7 @@ namespace IronSyndicate
             int n = Physics.OverlapSphereNonAlloc(transform.position, Spec.TriggerRadius, Near, LayerMask.GetMask("Vehicle"), QueryTriggerInteraction.Ignore);
             for (int i = 0; i < n; i++)
             {
-                var v = Near[i].attachedRigidbody != null ? Near[i].attachedRigidbody.GetComponent<Vehicle>() : null;
+                var v = Vehicle.Of(Near[i].attachedRigidbody);
                 if (v == null || !v.IsAlive || v == Spec.Owner) continue;
                 Explode(transform.position, null);
                 return;

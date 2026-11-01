@@ -62,7 +62,7 @@ namespace IronSyndicate
         public void OnPieceCollision(Collision collision)
         {
             if (!rammable || IsDestroyed || onlyCauses.Length > 0) return;
-            var v = collision.rigidbody != null ? collision.rigidbody.GetComponent<Vehicle>() : null;
+            var v = Vehicle.Of(collision.rigidbody);
             if (v == null) return;
             float closing = Mathf.Abs(Vector3.Dot(collision.relativeVelocity, collision.GetContact(0).normal));
             if (closing < Vehicle.RamThreshold) return;

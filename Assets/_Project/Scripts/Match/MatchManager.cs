@@ -164,8 +164,12 @@ namespace IronSyndicate
                     RoundTime += Time.deltaTime;
                     // Evaluated after the physics step, so eliminations in the same step count together.
                     if (labMode) break;
-                    int alive = Participants.Count(p => p != null && p.IsAlive);
-                    if (alive <= 1 && Participants.Count > 1) End(alive == 1 ? Participants.First(p => p != null && p.IsAlive) : null);
+                    // Plain loop: runs every frame, LINQ would allocate an enumerator each time.
+                    int alive = 0;
+                    Vehicle last = null;
+                    foreach (var p in Participants)
+                        if (p != null && p.IsAlive) { alive++; last = p; }
+                    if (alive <= 1 && Participants.Count > 1) End(alive == 1 ? last : null);
                     break;
             }
         }

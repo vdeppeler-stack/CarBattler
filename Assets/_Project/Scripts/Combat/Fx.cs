@@ -20,6 +20,7 @@ namespace IronSyndicate
                 if (_instance == null)
                 {
                     var go = new GameObject("[Fx]");
+                    go.hideFlags = HideFlags.HideInHierarchy; // pooled churn would repaint the Hierarchy every frame
                     _instance = go.AddComponent<Fx>();
                 }
                 return _instance;
@@ -35,12 +36,25 @@ namespace IronSyndicate
             }
         }
 
+        static readonly Dictionary<Color, Material> ColorCache = new Dictionary<Color, Material>();
+
+        /// <summary>Shared unlit material per colour (callers must not modify it); cached so repeated effects
+        /// do not leak a material each time.</summary>
         public static Material UnlitColor(Color c)
         {
+            if (ColorCache.TryGetValue(c, out var cached) && cached != null) return cached;
             var m = new Material(Unlit);
             m.SetColor("_BaseColor", c);
             m.color = c;
+            ColorCache[c] = m;
             return m;
+        }
+
+        /// <summary>Effect geometry neither casts nor receives shadows (extra shadow passes per explosion).</summary>
+        public static void NoShadows(Renderer r)
+        {
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            r.receiveShadows = false;
         }
 
         public static void Burst(Vector3 pos, float radius, Color color, float life = 0.35f)
@@ -63,6 +77,7 @@ namespace IronSyndicate
                 Destroy(go.GetComponent<Collider>());
                 go.transform.SetParent(transform);
                 go.GetComponent<Renderer>().sharedMaterial = new Material(Unlit);
+                NoShadows(go.GetComponent<Renderer>());
             }
             go.transform.position = pos;
             var r = go.GetComponent<Renderer>();

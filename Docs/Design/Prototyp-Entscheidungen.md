@@ -157,6 +157,28 @@ Jester Van und Dread Jester werden vorher mit FLUX.2 Klein zum Kirmes-Schwertran
 - Testprotokoll gepuffert, Konsolenausgabe nur für Rundenereignisse
 - VSync an
 
+Messung 01.11. (Development-Build ohne VSync, 1280×720, 5 Bots, `-perf -novsync`, Aufschlüsselung per
+`FrameStats` in `Perf/perf_<Zeit>_breakdown.txt`):
+
+| | vorher | nachher |
+|---|---|---|
+| FPS Mittel | 613 | 815 |
+| Rendering CPU/Frame | 0,72 ms | 0,55 ms |
+| SetPass | 32 | 18 |
+| Schattenwerfer | 34 | 22 |
+
+Massnahmen: SSAO-Renderer-Feature entfernt (nur deaktivieren bricht im Player das Rendering, weil die
+Shader gestrippt werden), Schatten 2 statt 4 Kaskaden mit niedriger Weichzeichnung, Effekte/Projektile/
+Pickups ohne Schatten, Farbmaterialien geteilt statt pro Effekt neu (Leck), HUD 20 Hz statt jeden Frame,
+`Vehicle.Of` mit `TryGetComponent` statt `GetComponent` (Editor-Allokation bei fehlender Komponente),
+MatchManager ohne LINQ pro Frame.
+Release-Build mit VSync: 7201 von 7201 Frames bei 16,7 ms (max. 16,9 ms) – kein Ruckeln im Spiel.
+
+Editor: Ruckeln und Einbruch kamen vom Editor selbst (Szenenansicht, Hierarchie, Gizmos). Fahrgraph-Gizmos nur
+noch bei Auswahl, gepoolte Effekte/Projektile nicht mehr in der Hierarchie, im Play Mode Bildrate auf die
+Monitorfrequenz begrenzt (`EditorFramePacing`). Weitere Editor-Tipps: Szenenansicht während Play Mode
+schliessen oder in einen anderen Tab legen, im Game-Fenster „VSync“ einschalten.
+
 ## Codes
 
 Nur im jeweiligen Menü erkannt. Tastatur: Pfeile, Q = L1, E = R1, T = Dreieck.

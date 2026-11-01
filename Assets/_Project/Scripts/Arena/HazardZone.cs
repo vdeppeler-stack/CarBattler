@@ -25,7 +25,7 @@ namespace IronSyndicate
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
 
-        static Vehicle VehicleOf(Collider c) => c.attachedRigidbody != null ? c.attachedRigidbody.GetComponent<Vehicle>() : null;
+        static Vehicle VehicleOf(Collider c) => Vehicle.Of(c.attachedRigidbody);
 
         void OnTriggerEnter(Collider other)
         {

@@ -18,6 +18,7 @@ namespace IronSyndicate
             go.transform.position = at + Vector3.up * 0.05f;
             go.transform.localScale = new Vector3(radius * 2f, 0.05f, radius * 2f);
             go.GetComponent<Renderer>().sharedMaterial = Fx.UnlitColor(new Color(1f, 0.35f, 0.05f));
+            Fx.NoShadows(go.GetComponent<Renderer>());
             var z = go.AddComponent<BurnZone>();
             z._radius = radius;
             z._until = Time.time + duration;
@@ -31,7 +32,7 @@ namespace IronSyndicate
             for (int i = 0; i < n; i++)
             {
                 var c = Hits[i];
-                var v = c.attachedRigidbody != null ? c.attachedRigidbody.GetComponent<Vehicle>() : null;
+                var v = Vehicle.Of(c.attachedRigidbody);
                 if (v != null && v.IsAlive && !v.Status.IsBurning) v.Status.Ignite(_source);
                 else if (v == null && c.TryGetComponent<IBurnable>(out var b)) b.Burn(_source);
             }

@@ -29,6 +29,9 @@ namespace IronSyndicate
         float _nextTesla;
         int _rounds;
 
+        FrameStats _stats;
+        public static bool NoVSync;
+
         public static void Start(float warmup, float minutes, string outDir)
         {
             var go = new GameObject("[PerfProbe]");
@@ -42,6 +45,7 @@ namespace IronSyndicate
         void Awake()
         {
             Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
+            if (NoVSync) { QualitySettings.vSyncCount = 0; Application.targetFrameRate = -1; }
             Application.runInBackground = true;
             LoadRound();
             _t0 = Time.realtimeSinceStartup;
@@ -71,6 +75,7 @@ namespace IronSyndicate
             if (!_measuring && elapsed >= warmupSeconds)
             {
                 _measuring = true;
+                _stats = FrameStats.Begin(measureSeconds + 5f);
                 _frames.Clear();
                 _bridgeDone = false;
                 Debug.Log("[IS] Perf: measuring");
@@ -118,6 +123,7 @@ namespace IronSyndicate
             sb.AppendLine();
             sb.AppendLine($"Frames über 33,3 ms: {over} ({over * 100f / _frames.Count:F1} %). Ziel: 95. Perzentil ≤ 33,3 ms → {(P(0.95f) <= 33.3f ? "erreicht" : "nicht erreicht")}.");
             File.WriteAllText(Path.Combine(outDir, $"perf_{stamp}.md"), sb.ToString(), new UTF8Encoding(false));
+            if (_stats != null) _stats.Report(Path.Combine(outDir, $"perf_{stamp}_breakdown.txt"));
             File.WriteAllText(Path.Combine(outDir, $"perf_{stamp}_frames.csv"), "ms\n" + string.Join("\n", _frames.Select(f => f.ToString("F2", System.Globalization.CultureInfo.InvariantCulture))), new UTF8Encoding(false));
             Debug.Log("[IS] Perf finished: " + Path.Combine(outDir, $"perf_{stamp}.md"));
             if (!Application.isEditor) Application.Quit();

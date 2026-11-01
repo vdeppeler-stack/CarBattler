@@ -71,6 +71,7 @@ namespace IronSyndicate
                 default: c = weapon != null ? weapon.color : Color.magenta; break;
             }
             go.GetComponent<Renderer>().sharedMaterial = Fx.UnlitColor(c);
+            Fx.NoShadows(go.GetComponent<Renderer>());
             _visual = go.transform;
         }
 
@@ -90,7 +91,7 @@ namespace IronSyndicate
         void TryGive(Collider other)
         {
             if (!Available) return;
-            var v = other.attachedRigidbody != null ? other.attachedRigidbody.GetComponent<Vehicle>() : null;
+            var v = Vehicle.Of(other.attachedRigidbody);
             if (v == null || !v.IsAlive) return;
 
             // Claim first, then grant: a second contact in the same step finds it unavailable.

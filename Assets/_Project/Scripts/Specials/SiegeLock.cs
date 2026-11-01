@@ -50,7 +50,7 @@ namespace IronSyndicate
             if (Physics.Raycast(m.position, dir, out var hit, Range, ~LayerMask.GetMask("Projectile", "Pickup", "Ignore Raycast"), QueryTriggerInteraction.Ignore))
             {
                 end = hit.point;
-                var v = hit.rigidbody != null ? hit.rigidbody.GetComponent<Vehicle>() : null;
+                var v = Vehicle.Of(hit.rigidbody);
                 if (v != null && v != V && v.IsAlive)
                 {
                     Damage(v, HitDamage * Power);

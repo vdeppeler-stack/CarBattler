@@ -37,7 +37,7 @@ namespace IronSyndicate
             int n = Physics.OverlapBoxNonAlloc(center, new Vector3(V.Definition.bodySize.x * 0.8f, 1.2f, 1.5f), Hits, V.transform.rotation, LayerMask.GetMask("Vehicle"));
             for (int i = 0; i < n; i++)
             {
-                var other = Hits[i].attachedRigidbody != null ? Hits[i].attachedRigidbody.GetComponent<Vehicle>() : null;
+                var other = Vehicle.Of(Hits[i].attachedRigidbody);
                 if (other == null || other == V || !other.IsAlive || !_hit.Add(other)) continue;
                 Damage(other, HitDamage * Power);
                 var side = Vector3.Dot(other.transform.position - V.transform.position, V.transform.right) >= 0f ? V.transform.right : -V.transform.right;
