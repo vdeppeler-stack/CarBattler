@@ -140,6 +140,12 @@ Normal Map, Metallic/Glätte aus glTF-ORM mit Metall ×0,4, Occlusion) → `Asse
 → `Iron Syndicate/Build/Vehicle Bodies (generated models)` (eigenes URP-Lit-Material je Fahrzeug, Prefab,
 Ausrichtung +Z, Länge aus dem Fahrzeugdatensatz). Alles neu verarbeiten: `ArtSource/Tools/reprocess_all.ps1`.
 
+Eingabe (seit Interceptor-Test, `Docs/Design/Interceptor_Vergleich.png`): Die Handbuch-Ausschnitte schneiden
+Fahrzeuge ab und enthalten Hintergrund und Textfelder. Deshalb stellt FLUX.2 Klein jedes Fahrzeug zuerst
+vollständig und freigestellt dar (`ArtSource/Comfy/isolate/`, Ergebnisse in `ArtSource/Comfy/rework/isolate/`),
+erst dieses Bild geht in TRELLIS. Volle TRELLIS-Qualität brachte im Test keinen Gewinn (und Speichermangel).
+Bekannte Grenze: Das Heck wird von TRELLIS ergänzt; der Goliath ist dadurch vierrädrig geworden.
+
 Erste Fassung (verworfen): Reduktion in Blender von 60 000 auf 12 000 Flächen verzerrte die UVs des
 gebackenen Atlas, dazu war die Normal Map als Farbtextur importiert – Ergebnis war verrauschte Optik. Die Kollisionsbox bleibt die des Datensatzes; Räder sind Teil des Modells.
 Jester Van und Dread Jester werden vorher mit FLUX.2 Klein zum Kirmes-Schwertransporter umgestaltet
