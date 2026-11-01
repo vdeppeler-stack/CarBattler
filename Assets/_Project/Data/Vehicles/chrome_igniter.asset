@@ -39,4 +39,4 @@ MonoBehaviour:
   bodySize: {x: 2.1, y: 1, z: 5.2}
   wheelRadius: 0.42
   bodyColor: {r: 0.55, g: 0.15, b: 0.45, a: 1}
-  bodyPrefab: {fileID: 0}
+  bodyPrefab: {fileID: 8515598385294915961, guid: 78fa9f118efa75c4691210b00680e220, type: 3}

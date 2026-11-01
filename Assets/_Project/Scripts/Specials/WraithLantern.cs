@@ -39,10 +39,11 @@ namespace IronSyndicate
             if (Time.time >= _nextTick)
             {
                 _nextTick += TickInterval;
-                float amount = Drain * Power;
-                float before = _target.Hp;
-                Damage(_target, amount);
-                V.Heal(before - _target.Hp, "wraith-lantern");
+                // A killing tick releases the tether (GrabLink) and clears _target inside Damage.
+                var target = _target;
+                float before = target.Hp;
+                Damage(target, Drain * Power);
+                V.Heal(before - target.Hp, "wraith-lantern");
             }
         }
 

@@ -78,7 +78,8 @@ namespace IronSyndicate.EditorTools
 
             b = Bounds(inst);
             var target = def.bodySize * Overhang;
-            float s = Mathf.Min(target.x / Mathf.Max(0.01f, b.size.x), target.z / Mathf.Max(0.01f, b.size.z));
+            // Match the length; wide tops (canopies, plows) may overhang the collision box up to 1.7x its width.
+            float s = Mathf.Min(target.z / Mathf.Max(0.01f, b.size.z), def.bodySize.x * 1.7f / Mathf.Max(0.01f, b.size.x));
             // Side-wheel colossus: giant wheels may overhang the collision box sideways.
             if (wideStyle) s = (def.bodySize.x + 1.6f) / Mathf.Max(0.01f, b.size.x);
             inst.transform.localScale = Vector3.one * s;
