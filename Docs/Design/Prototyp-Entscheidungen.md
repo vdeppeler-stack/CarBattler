@@ -77,7 +77,25 @@ Jester Van wird passend dazu ein gepanzerter Schaustellerwagen.
 
 Arenamechaniken (zerstörbare Brücke, Teleporter, Reaktor, Gefahrenzonen, Freilegungen)
 dienen als Inspiration; Layouts, Wahrzeichen und Freischaltwege werden eigenständig gestaltet.
-Freischaltcodes werden neu vergeben (siehe `Codes` unten, folgt).
+Freischaltcodes werden neu vergeben (siehe `Codes`).
+
+## Codes
+
+Nur im jeweiligen Menü erkannt. Tastatur: Pfeile, Q = L1, E = R1, T = Dreieck.
+Im Entwicklerbuild ist der Kader ohnehin komplett freigeschaltet (`MatchSetup.RosterUnlocked`).
+
+| Freischaltung | Folge |
+|---|---|
+| Jester Van | ← ← → → L1 R1 |
+| Leviathan APC | ↓ ↑ ↓ ↑ R1 R1 |
+| Arenacodes | folgen mit den Arenen (Phase 2) |
+
+## Testbetrieb über MCP
+
+- Play Mode läuft auch ohne Editorfokus weiter (`Iron Syndicate/Lab/Tick Play Mode In Background`).
+- `BackgroundPlayLoop.RunFrames(n)` spult n Frames vor (für Bot-Runden aus dem Agenten heraus).
+- Jede Runde schreibt ein CSV-Protokoll nach `Logs/IronSyndicate/` (Build-ID, Seed, Gerät, Ereignisse, Ergebnis je Fahrzeug).
+- Bots steuern vorerst direkt mit Fühlern; der handgepflegte Fahrgraph kommt mit Tectonic Wreck.
 
 ## Platzhalter
 
