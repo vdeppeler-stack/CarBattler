@@ -30,11 +30,7 @@ namespace IronSyndicate
         {
             get
             {
-                if (_unlit == null)
-                {
-                    var shader = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Color");
-                    _unlit = new Material(shader);
-                }
+                if (_unlit == null) _unlit = new Material(BaseMaterials.Unlit);
                 return _unlit;
             }
         }

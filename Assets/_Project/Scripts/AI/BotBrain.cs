@@ -15,6 +15,8 @@ namespace IronSyndicate
         public float reengageAbove = 0.55f;
         public float memorySeconds = 2f;
         public float stuckSeconds = 2f;
+        [Tooltip("Seconds without seeing an enemy before the bot hunts the nearest one.")]
+        public float huntAfter = 12f;
 
         Vehicle _v;
         System.Random _rng;
@@ -29,7 +31,7 @@ namespace IronSyndicate
         float _stuckTimer, _unstickUntil, _unstickSteer;
         int _stuckCount;
         float _lastSteer;
-        float _nextSpecialLog, _nextSpecialTry;
+        float _nextSpecialLog, _nextSpecialTry, _initTime;
         string _lastSpecialReason;
         Vector3 _wanderGoal;
         float _wanderUntil;
@@ -51,6 +53,7 @@ namespace IronSyndicate
         {
             _v = v;
             _rng = new System.Random(seed);
+            _initTime = Time.time;
             _nextPerceive = Time.time + (float)_rng.NextDouble() * perceptionInterval;
         }
 
@@ -144,6 +147,15 @@ namespace IronSyndicate
                 return;
             }
 
+            // Nobody seen for a while: arm up if empty-handed and close to a weapon, otherwise hunt.
+            if (time - Mathf.Max(_lastSeen, _initTime) > huntAfter)
+            {
+                var near = _v.Arsenal.TotalAmmo == 0 ? NearestPickup(x => x.kind == PickupKind.Weapon, 60f) : null;
+                if (near != null) { _goalPickup = near; _goal = near.transform.position; State = "arm-up"; return; }
+                var prey = NearestEnemy();
+                if (prey != null) { _goal = prey.transform.position; State = "hunt"; return; }
+            }
+
             var pickup = NearestPickup(x => x.kind == PickupKind.Weapon || (x.Heals && _v.HpFraction < 0.9f), 200f);
             if (pickup != null) { _goalPickup = pickup; _goal = pickup.transform.position; State = "collect"; return; }
 
@@ -155,6 +167,19 @@ namespace IronSyndicate
             }
             _goal = _wanderGoal;
             State = "wander";
+        }
+
+        Vehicle NearestEnemy()
+        {
+            Vehicle best = null;
+            float bestD = float.MaxValue;
+            foreach (var other in Vehicle.All)
+            {
+                if (other == _v || !other.IsAlive || other.Status.IsCloaked) continue;
+                float d = (other.transform.position - _v.transform.position).sqrMagnitude;
+                if (d < bestD) { bestD = d; best = other; }
+            }
+            return best;
         }
 
         PickupSpawner NearestPickup(System.Predicate<PickupSpawner> filter, float maxDist)

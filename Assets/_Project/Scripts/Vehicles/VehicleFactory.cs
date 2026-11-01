@@ -39,8 +39,15 @@ namespace IronSyndicate
                 body.name = "Body";
                 body.transform.localPosition = Vector3.zero;
                 // Team colour as a ground ring that reads from the chase camera without hiding the model.
-                var ring = Box(visual, "TeamRing", new Vector3(0f, 0.04f, 0f), new Vector3(size.x + 1.2f, 0.03f, size.z + 1.2f), teamColor);
-                ring.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                float hx = size.x * 0.5f + 0.6f, hz = size.z * 0.5f + 0.6f;
+                var frame = new[]
+                {
+                    Box(visual, "TeamRing", new Vector3(0f, 0.04f, hz), new Vector3(hx * 2f, 0.03f, 0.3f), teamColor),
+                    Box(visual, "TeamRing", new Vector3(0f, 0.04f, -hz), new Vector3(hx * 2f, 0.03f, 0.3f), teamColor),
+                    Box(visual, "TeamRing", new Vector3(hx, 0.04f, 0f), new Vector3(0.3f, 0.03f, hz * 2f), teamColor),
+                    Box(visual, "TeamRing", new Vector3(-hx, 0.04f, 0f), new Vector3(0.3f, 0.03f, hz * 2f), teamColor),
+                };
+                foreach (var f in frame) f.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             }
             else
             {
@@ -241,8 +248,7 @@ namespace IronSyndicate
         public static Material Mat(Color c)
         {
             if (Materials.TryGetValue(c, out var m) && m != null) return m;
-            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            m = new Material(shader);
+            m = new Material(BaseMaterials.Lit);
             m.SetColor("_BaseColor", c);
             m.color = c;
             Materials[c] = m;

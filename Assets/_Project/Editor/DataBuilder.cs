@@ -103,9 +103,20 @@ namespace IronSyndicate.EditorTools
             db.vehicles.Add(carousel);
 
             EditorUtility.SetDirty(db);
+            EnsureBaseMaterial(BaseMaterials.LitPath, "Universal Render Pipeline/Lit");
+            EnsureBaseMaterial(BaseMaterials.UnlitPath, "Universal Render Pipeline/Unlit");
             AssetDatabase.SaveAssets();
             Debug.Log($"[IS] Data built: {db.vehicles.Count} vehicles, {db.weapons.Count} weapons.");
             return db;
+        }
+
+        /// <summary>Runtime colour templates live in Resources so their shaders ship with the player.</summary>
+        static void EnsureBaseMaterial(string resourcePath, string shader)
+        {
+            string path = $"Assets/_Project/Resources/{resourcePath}.mat";
+            if (AssetDatabase.LoadAssetAtPath<Material>(path) != null) return;
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+            AssetDatabase.CreateAsset(new Material(Shader.Find(shader)), path);
         }
 
         static WeaponDefinition Weapon(string id, string name, WeaponBehaviour b, int charges, float cooldown, float direct, float splash, float radius,

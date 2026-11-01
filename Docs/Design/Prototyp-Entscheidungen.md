@@ -67,9 +67,12 @@ Archetyp und Rolle bleiben erhalten, die Mechanik ist neu.
 Kein Eiswagen und kein Clownskopf. Neues Konzept: ein gigantischer gepanzerter
 Kirmes-Schwertransporter.
 
-- Phase 1: Transporter mit extremem Rammschaden, sucht lange Rammlinien
-- Phase 2: Das brennende Karussell-Oberteil löst sich als langsamer, rotierender
-  Geschützturm („Hellfire Carousel“) und feuert wiederholte Salven. Erst sein Tod beendet den Kampf.
+- Phase 1 (`dread_ram`): Transporter mit 2,5-fachem Rammschaden, Rammfahrt (3 s, 4-fach) auf
+  langen Rammlinien
+- Phase 2 (`hellfire_carousel`, eigenes Fahrzeug, 450 HP): Das brennende Karussell-Oberteil löst
+  sich beim Tod des Transporters genau einmal als langsamer, rotierender Geschützturm und feuert
+  alle 2,6 s Ringsalve plus gezielte Dreiersalve. Erst sein Tod beendet den Kampf.
+  (Handbuch: schwebender Flammenkopf – ersetzt durch das Karussell.)
 
 Jester Van wird passend dazu ein gepanzerter Schaustellerwagen.
 
@@ -78,6 +81,70 @@ Jester Van wird passend dazu ein gepanzerter Schaustellerwagen.
 Arenamechaniken (zerstörbare Brücke, Teleporter, Reaktor, Gefahrenzonen, Freilegungen)
 dienen als Inspiration; Layouts, Wahrzeichen und Freischaltwege werden eigenständig gestaltet.
 Freischaltcodes werden neu vergeben (siehe `Codes`).
+
+### Tectonic Wreck (Stage 1, eigenes Layout)
+
+Industriegebiet, durch einen Erdgraben gespalten (`Iron Syndicate/Build/Tectonic Wreck Scene`).
+
+- Nord- und Südplateau, dazwischen 8 m tiefer Graben; zwei überdachte Abschnitte bilden die
+  Strassentunnel, an beiden Enden führt der Graben über Rampen hinauf
+- Übergänge: Tunneldächer, Endverbinder, Sprungschanze (Süd → Nord, ~22 m/s) und die obere
+  Highway-Brücke, deren Mittelspannweite nur C4 bricht
+- Teleporter im Sicherheitskäfig (Nord) führt hinauf auf das Highway-Deck
+- Tesla-Reaktor mit vier Säulen; jede Säule gibt beim Zerstören einmalig eine Waffe frei
+- Zerstörbare Buchstaben „WRECK“ (E und K verbergen Waffen), Depot mit Tor und zwei versteckten Waffen
+- Wachturm mit Rampe und Core Overcharge auf dem Dach
+- Fünf Startplätze, Aussenmauern 30 m hoch
+- Fahrgraph (`DriveGraph`): Kanten Strasse, Sprung, Abwurf, Teleporter; zerstörte Objekte sperren
+  bzw. öffnen Kanten, Bots planen neu (`replan` im Protokoll). Ziele in direkter Linie mit Boden
+  dazwischen fahren Bots direkt an. Ohne Feindsicht über 12 s jagen Bots den nächsten Gegner.
+
+### Testlabor (`Iron Syndicate/Build/Test Lab Scene`)
+
+Neun Stationen an einem gemeinsamen Korridor: 1 Start mit Boss-Pad, 2 fallende Brücke,
+3 Turm wird Strasse, 4 Statue öffnet Tunnel, 5 Glas öffnet Raum, 6 Lava, 7 Pool mit Lavastreifen
+davor, 8 Abgrund mit Eisplatten (Vorwarnung) und sicherer Insel, 9 Zug (zerstörbar) und Schilf.
+Vorgaben bleiben beim Zurücksetzen erhalten: Fahrzeug, Seed, Station, Inventar, Arenazustand.
+Boss-Spawner startet den Bosskampf genau einmal nach 8 Abschüssen (simulierbar mit J).
+
+Tasten: 1–9 Station · Bild↑/↓ Fahrzeug · O Bot · P Dummy · B Endboss · J Abschuss simulieren ·
+I Inventar · H auffüllen · K Gegner entfernen · U Arenazustand · Strg+R zurücksetzen · Y neuer Seed · F1 Hilfe.
+
+## Prüfungen
+
+- EditMode (45): Kombos, Daten, Menücodes (positiv/negativ), Fahrgraph mit Brückeneinsturz und Depottor
+- PlayMode (18, Handbuch Kap. 10 und Gefahrenmodule): PM-01 Brandübertragung, PM-02/03/04 Löschen durch
+  Nitro/Aegis/Pool, PM-05 Stase auf Rampe (Schwerkraft bleibt), PM-06 Schildende 3 s, PM-07 Lock-On gegen
+  Tarnung, PM-08 Schilf, PM-09 Teleport ohne Rücksprung, PM-10 Pickup-Respawn, PM-11 Lava nur im Volumen,
+  PM-12 Abgrund, PM-13 Eisplatte, PM-14 Zug, PM-15 C4 Rampe/Ebene, PM-16 Bossphasen, PM-17 Boss-Spawner,
+  PM-18 Rundenneustart
+- Jeder PlayMode-Fall schreibt eine Zeile in `Logs/IronSyndicate/Pruefprotokoll_<Datum>.csv`
+  (Fall, Build, Gerät, Ausgangslage, Handlung, Soll, Ist, Ergebnis, Fehler-ID)
+
+## Balancing und Laptopmessung (Build)
+
+- `IronSyndicate.exe -batchmode -nographics -balancing` – 91 Paarungen × 2 Startseiten × 3 Seeds
+  (11, 22, 33) = 546 Duelle auf Tectonic Wreck; nach 180 s entscheidet der HP-Anteil. Ergebnis in
+  `Balancing/<Zeit>/duelle.csv` und `zusammenfassung.md` neben der exe.
+- `IronSyndicate.exe -perf` – 1280×720, 60 s Aufwärmen, 10 min Messung mit fünf Bots, Brückeneinsturz
+  nach 3 min, Tesla alle 20 s; Ergebnis `Perf/perf_<Zeit>.md` (Mittel, 95./99. Perzentil, Frames > 33,3 ms).
+  Diese Messung muss auf dem i7-Laptop laufen.
+
+## Fahrzeugmodelle aus den Handbuch-Bildern
+
+Pipeline: Hauptbild je Fahrzeug aus dem Handbuch ausschneiden (`ArtSource/Tools/crop_handbook.ps1`) →
+ComfyUI TRELLIS.2 (Bild → 3D, `ArtSource/Comfy/`) → Blender (`ArtSource/Tools/process_vehicle.py`:
+12 000 Dreiecke, 1K-Texturen, Ursprung Bodenmitte) → `Assets/_Project/Art/Vehicles/<id>.fbx` →
+`Iron Syndicate/Build/Vehicle Bodies (generated models)` (Prefab, Ausrichtung +Z, Grösse aus dem
+Fahrzeugdatensatz). Die Kollisionsbox bleibt die des Datensatzes; Räder sind Teil des Modells.
+Jester Van und Dread Jester werden vorher mit FLUX.2 Klein zum Kirmes-Schwertransporter umgestaltet
+(keine Clown- oder Eiswagenmotive). Fahrzeuge ohne Modell behalten den Grundkörper-Platzhalter.
+
+## Leistung (Ruckeln)
+
+- Radmodelle werden lokal unter dem interpolierten Fahrzeug gesetzt (vorher Weltposition im Physiktakt)
+- Testprotokoll gepuffert, Konsolenausgabe nur für Rundenereignisse
+- VSync an
 
 ## Codes
 

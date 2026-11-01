@@ -79,6 +79,7 @@ namespace IronSyndicate.EditorTools
             cam.targetTexture = rt;
             cam.farClipPlane = 200f;
             var tex = new Texture2D(_cell, _cell, TextureFormat.RGB24, false);
+            cam.Render(); // the first render after creating the camera can come back empty
             for (int i = 0; i < _defs.Count; i++)
             {
                 var def = _defs[i];
